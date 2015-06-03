@@ -9,6 +9,11 @@ warblers["GET /"] = function (request, response) {
 	});
 };
 
+warblers["GET /test"] = function (request, response) {
+		response.write("test");
+		response.end();
+};
+
 warblers["GET /warbles"] = function (request, response) {
 	response.write(JSON.stringify(listWarbles));
 	response.end();
