@@ -20,7 +20,9 @@
     "nodemon": "nodemon ./server.js"
   },
   "pre-commit": [
-
     "jshint"
-  ]
- }
+  ],
+  "dependencies": {
+    "istanbul": "^0.3.14"
+  }
+}
