@@ -1,9 +1,9 @@
 # warbler
 The next Twitter
 
-[![Code Climate](https://codeclimate.com/github/CodersInDev/wobbly-warbler/badges/gpa.svg)](https://codeclimate.com/github/CodersInDev/wobbly-warbler)
-[![Test Coverage](https://codeclimate.com/github/CodersInDev/wobbly-warbler/badges/coverage.svg)](https://codeclimate.com/github/CodersInDev/wobbly-warbler/coverage)
-[![Build Status](https://travis-ci.org/CodersInDev/wobbly-warbler.svg?branch=master)](https://travis-ci.org/CodersInDev/wobbly-warbler)
+[![Code Climate](https://codeclimate.com/github/CodersInDev/warbler/badges/gpa.svg)](https://codeclimate.com/github/CodersInDev/warbler)
+[![Test Coverage](https://codeclimate.com/github/CodersInDev/warbler/badges/coverage.svg)](https://codeclimate.com/github/CodersInDev/warbler/coverage)
+[![Build Status](https://travis-ci.org/CodersInDev/warbler.svg?branch=master)](https://travis-ci.org/CodersInDev/warbler)
 
 
 ## Why?
