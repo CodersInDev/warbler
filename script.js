@@ -22,9 +22,9 @@ $("#warbleUpdate").click(function() {
 			$("#toolTip").html("No new warbles to display").finish().fadeIn("fast").delay(1000).fadeOut("slow");
 		} else {
 			// TODO parse JSON object, format warbles, and update #publicStream
-			$("#toolTip").html("Latest warbles added!").finish().fadeIn("fast").delay(1000).fadeOut("slow")
+			$("#toolTip").html("Latest warbles added!").finish().fadeIn("fast").delay(1000).fadeOut("slow");
 		}
-	})
+	});
 });
 
 // only get elements with higher timestamps, which would mean traversing the whole array??
@@ -33,20 +33,20 @@ function updatePublicStream() {
 	var latestWarbleTime = warbleArray[warbleArray.length - 1].timestamp || 0;
 	$.post("/warbles", latestWarbleTime, function handler(data){
 		JSON.parse(data).map(function(a) {
-			warbleArray.push(a)
-		})
+			warbleArray.push(a);
+		});
 		// $("#publicStream").append(formatWarble())
-	})
+	});
 }
 
-//Send newly created warble to the server "create" endpoint 
+//Send newly created warble to the server "create" endpoint
 $("#warbleSubmit").click(function(){
-	var warble = new Warble($("#warbleBox").val())
+	var warble = new Warble($("#warbleBox").val());
 	$.post("/create", JSON.stringify(warble), function () {
 		$("#userStream").append(formatWarble(warble));
 		updatePublicStream();
-	})
-})
+	});
+});
 
 console.log('script loaded');
 var listWarbles = document.getElementById('listWarbles');
