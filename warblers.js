@@ -14,6 +14,19 @@ warblers["GET /warbles"] = function (request, response) {
 	response.end();
 };
 
+
+warblers["POST /create"] = function (request, response) {
+	var warbleString = '';
+	request.on('data', function(chunk){
+		warbleString += chunk.toString();
+	});
+
+	request.on('end', function(){
+		var newWarble = JSON.parse(warbleString);
+		listWarbles.push(newWarble);
+	});
+};
+
 warblers.generic = function (request, response){
 	fs.readFile(__dirname + request.url, function (err, data){
 		if (err){
