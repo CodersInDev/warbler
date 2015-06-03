@@ -42,8 +42,8 @@ function updatePublicStream() {
 $("#warbleSubmit").click(function(){
 	var warble = new Warble($("#warbleBox").val());
 	$.post("/create", JSON.stringify(warble), function () {
-		$("#userStream").append(formatWarble(warble));
-		updatePublicStream();
+		// $("#userStream").append(formatWarble(warble));
+		// updatePublicStream();
 	});
 });
 

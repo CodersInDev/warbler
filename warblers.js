@@ -15,9 +15,15 @@ warblers["GET /warbles"] = function (request, response) {
 };
 
 
-wrablers["POST /create"] = function (request, response) {
-	request.on('data', function(chunck){
-		console.log(chunk);
+warblers["POST /create"] = function (request, response) {
+	var warbleString = '';
+	request.on('data', function(chunk){
+		warbleString += chunk.toString();
+	});
+
+	request.on('end', function(){
+		var newWarble = JSON.parse(warbleString);
+		listWarbles.push(newWarble);
 	});
 };
 
