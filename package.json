@@ -1,0 +1,26 @@
+{
+  "name": "warbler",
+  "version": "1.0.0",
+  "description": "Twitter like application",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodersInDev/warbler"
+  },
+  "devDependencies": {
+    "istanbul": "^0.3.14",
+    "pre-commit": "0.0.9",
+    "jshint": "^2.8.0"
+  },
+  "scripts": {
+    "test": "node ./test/test.js",
+    "nocov": "node test/*.js",
+    "coverage": "istanbul cover ./test/*.js && ./node_modules/.bin/istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100",
+    "jshint": "jshint -c .jshintrc --exclude-path .gitignore .",
+    "start": "node ./server.js",
+    "nodemon": "nodemon ./server.js"
+  },
+  "pre-commit": [
+    "jshint",
+    "coverage"
+  ]
+ }
