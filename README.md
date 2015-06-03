@@ -21,3 +21,23 @@ We will have the ability to create Warbles, see existing Warbles, and delete som
 - [ ] Move Warbles to Redis
 - [ ] Deploy to Heroku
 - [ ] Add real-time updates of Warbles
+
+### To run, first clone the repository  
+
+### Then go to the repository directory and install the dependencies:  
+``` npm install ```  
+This will install the correct version of the relevant dependencies so you can run the app.  
+
+### Now load the page  
+```npm run nodemon```  
+ 
+http://localhost:8000
+
+### The app has the following functions:  
+
+* [x] Create a new warble by typing in the box and hitting the button  
+ * [x] This will send your warble to the server, 
+ * [ ] update your personal warble stream with your new warble, and 
+ * [ ] update the public warble stream with warbles from other warblers on the worldwide web  
+* [ ] Update the public warble stream every 30 seconds
+* [ ] Allow the original warbler (and only the original warbler) to delete her warbles
