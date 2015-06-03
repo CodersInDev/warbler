@@ -9,7 +9,7 @@ function Warble(content) {
 
 // Take content and timestamp of warble and create html element
 function formatWarble(warble) {
-
+	return warble.content + "/nWarbled at " + warble.timestamp;
 }
 
 // Update the public stream so latest warbles at the top. get must return only
@@ -43,7 +43,7 @@ $("#warbleSubmit").click(function(){
 	var warble = new Warble($("#warbleBox").val());
 	$.post("/create", JSON.stringify(warble), function () {
 		$("#userStream").append(formatWarble(warble));
-		updatePublicStream();
+		// updatePublicStream();
 	});
 });
 
