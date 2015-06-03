@@ -1,0 +1,48 @@
+/************Reset**************/
+html, body, div, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, ol, ul, li, form, fieldset, legend, label, table, header, footer, nav, section {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+header, footer, nav, section, article, hgroup, figure {
+    display: block;
+}
+
+legend {
+    display: none;
+}
+/************End Reset**************/
+
+/************Global**************/
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/************End Global**************/
+
+.column {
+    height: 100%;
+    width: 33%;
+    float: left;
+    display: inline-block;
+    border: 2px solid black;
+}
+
+textarea {
+    height: 100px;
+    width: 200px;
+    text-align: left;
+}
+
+h1{
+  color:red;
+}
+

@@ -20,6 +20,7 @@
     "nodemon": "nodemon ./server.js"
   },
   "pre-commit": [
+
     "jshint"
   ]
  }
