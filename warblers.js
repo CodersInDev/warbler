@@ -49,7 +49,9 @@ warblers["POST /create"] = function (request, response) {
 	    dataFromFile.unshift(newWarble);
 	    fs.writeFile('data.json', JSON.stringify(dataFromFile), function (err) {
 	        console.log('It\'s saved!');
+
 	    });
+	    response.end('string');
 	});
 };
 
