@@ -10,9 +10,8 @@ warblers["GET /"] = function (request, response) {
 };
 
 warblers["GET /warbles"] = function (request, response) {
-	fs.readFile('data.json', function (err, data){
-		response.write(JSON.stringify(data));
-	});
+	var dataFromFile = require(__dirname + '/data.json');
+	response.write(JSON.stringify(dataFromFile));
 	response.end();
 };
 
@@ -40,24 +39,17 @@ warblers["POST /create"] = function (request, response) {
 	var warbleString = '';
 	var wrablersData;
 	var newWarble;
-
 	request.on('data', function(chunk){
-		warbleString += chunk.toString();
+	    warbleString += chunk.toString();
 	});
 
 	request.on('end', function(){
-		newWarble = JSON.parse(warbleString);
-		//listWarbles.unshift(newWarble);
-
-		//read file
-		fs.readFile('data.json', function (err, data){
-			wrablersData = JSON.parse(data);
-			wrablersData.unshift(newWarble);
-			//write the new data
-			fs.writeFile('data.json', JSON.stringify(wrablersData), function (err) {
-				console.log('It\'s saved!');
-			});
-		});
+	    newWarble = JSON.parse(warbleString);
+	    var dataFromFile = require(__dirname + '/data.json');
+	    dataFromFile.unshift(newWarble);
+	    fs.writeFile('data.json', JSON.stringify(dataFromFile), function (err) {
+	        console.log('It\'s saved!');
+	    });
 	});
 };
 
