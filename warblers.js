@@ -1,4 +1,4 @@
-var listWarbles = [{id: 1, content: "first warble", timestamp: "2015/06/01"}, {id: 2, content: "second warble", timestamp: "2015/06/02"}];
+var listWarbles = [];
 var warblers = {};
 var fs = require('fs');
 
@@ -10,20 +10,57 @@ warblers["GET /"] = function (request, response) {
 };
 
 warblers["GET /warbles"] = function (request, response) {
-	response.write(JSON.stringify(listWarbles));
+	fs.readFile('data.json', function (err, data){
+		console.log("type of data" + typeof data.toString());
+		response.write(JSON.stringify(data));
+	});
 	response.end();
 };
 
+warblers["POST /warbles"] = function (request, response) {
+	//get the newest wrables
+	var result = [];
+	var timestamp = '';
+	request.on('data', function(chunkTimestamp){
+		timestamp += chunk.toString();
+	});
+
+	request.on('end', function(){
+		for(var i =0; i < result.length; i++){
+			if(listWarbles[i].timestamp.toString() !== timestamp){
+				result.unshift(listWarbles[i]);
+			}
+		}
+		response.write(JSON.stringify(result));
+		response.end();
+	});
+};
 
 warblers["POST /create"] = function (request, response) {
+	//create a warbles and save it in a file
 	var warbleString = '';
+	var wrablersData;
+	var newWarble;
+
 	request.on('data', function(chunk){
 		warbleString += chunk.toString();
 	});
 
 	request.on('end', function(){
-		var newWarble = JSON.parse(warbleString);
+		newWarble = JSON.parse(warbleString);
 		listWarbles.push(newWarble);
+
+		//read file
+		fs.readFile('data.json', function (err, data){
+			wrablersData = JSON.parse(data);
+			console.log(wrablersData);
+			console.log(typeof wrablersData);
+			wrablersData.unshift(newWarble);
+			//write the new data
+			fs.writeFile('data.json', JSON.stringify(wrablersData), function (err) {
+				console.log('It\'s saved!');
+			});
+		});
 	});
 };
 
