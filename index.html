@@ -6,30 +6,34 @@
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="css/mobile-first.css" media="screen, handheld" />
     	<link rel="stylesheet" type="text/css" href="css/enhanced.css" media="screen  and (min-width: 48em)"/>
-	  <link rel='stylesheet' href='style.css'>
+	  <!-- <link rel='stylesheet' href='style.css'> -->
 	</head>
 
 	<body>
 		<header>
-			<div id="userWarbles">My Warbles</div>
-			<div id="userProfile">My profile</div>
+			<div id="userWarbles"><p>My Warbles</p></div>
+			<div id="userProfile"><p>My profile</p></div>
 		</header>
 		<div id="content">
-			<div id="userStream" class="">
+			<div id="userStream" style="display:none;">
 				<span>This is your walled warble stream</span>
 			</div>
 
-			<div id="publicStream" class="">
+			<div id="publicStream">
 
 				<span>This is the worldwide warble stream</span>
 				<ul id="listWarbles"></ul>			
 		</div>
 		<footer>
-			<div id="warbleWrap" class="column">
+			<div id="warbleWrap">
+				<input id="warbleSubmit" type="button" value="Send"/>
+			 	<div class="wrap">
+			    	<input id="warbleBox" type="text"/>
+			   	</div>
 
-				<textarea id="warbleBox" maxlength="141"></textarea>
+				<!-- <textarea id="warbleBox" maxlength="141"></textarea>
 
-				<input id='warbleSubmit' type="button" value="Warble to the world">
+				<input id='warbleSubmit' type="button" value="Warble to the world"> -->
 			</div>
 		</footer>
 

@@ -48,7 +48,7 @@ header {
 
 #content {
     width: 100%;
-    margin: 0 auto;
+    margin: 60px auto;
     /*padding: 60px 0;*/
     background: #bada55;
 }
@@ -56,26 +56,47 @@ header {
 footer {
     width: 100%;
     background: green;
-    height: 60px;
+    /*height: 80px;*/
     /*background: red;*/
     position: fixed;
     bottom: 0;
-    border-top:1px solid orange;
+    /*border-top:1px solid orange;*/
     z-index: 999;
 }
 
+li {
+    font-size: 4em;
+}
 /***********Header******************/
 #userWarbles {
     display: inline-block;
     float:left;
     color: yellow;
-    background-color: black;
-    font-size: 18px;
+    font-size: 2.5em;
+    padding: 3px 10px;
 }
 
 #userProfile {
     display: inline-block;
     float:right;
     color: yellow;
+    font-size: 2.5em;
+    padding: 3px 10px;
 }
 
+/***********Footer******************/
+textarea {
+    width: 100%;
+}
+#warbleBox {
+    height: 70px;
+    width: 100%;
+}
+#warbleSubmit {
+    float: right;
+    font-size: 3.8em;
+}
+.wrap {
+    overflow: hidden;
+    padding-right: .5em;
+}
