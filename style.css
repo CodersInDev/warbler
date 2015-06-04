@@ -37,9 +37,10 @@ html, body {
 }
 
 textarea {
-    height: 100px;
+    /*height: 100px;
     width: 200px;
-    text-align: left;
+    text-align: left;*/
+    width:100%;
 }
 
 h1{
