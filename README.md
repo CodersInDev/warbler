@@ -15,10 +15,10 @@ We want to learn how to handle endpoints, with an aim to make a version of Twitt
 We will have the ability to create Warbles, see existing Warbles, and delete something you have previously warbled.
 
 ## How?
-- [ ] Make Create, Read, and Delete endpoints
-- [ ] Store Warbles as JSON in memory
-- [ ] Store Warbles in the file system
-- [ ] Use Cookies to restrict Warble deletion to the browser from which the Warble was originally created.
+- [x] Make Create, Read, and Delete endpoints
+- [x] Store Warbles as JSON in memory
+- [x] Store Warbles in the file system
+- [x] Use Cookies (or preferably localStorage) to restrict Warble deletion to the browser from which the Warble was originally created.
 - [ ] Move Warbles to Redis
 - [ ] Deploy to Heroku
 - [ ] Add real-time updates of Warbles
@@ -39,6 +39,6 @@ http://localhost:8000
 * [x] Create a new warble by typing in the box and hitting the button  
  * [x] This will send your warble to the server, 
  * [ ] update your personal warble stream with your new warble, and 
- * [ ] update the public warble stream with warbles from other warblers on the worldwide web  
+ * [ ] update the public warble stream with warbles from other warblers on the worldwide web by refreshing the page 
 * [ ] Update the public warble stream every 30 seconds
 * [ ] Allow the original warbler (and only the original warbler) to delete her warbles
