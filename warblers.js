@@ -11,7 +11,6 @@ warblers["GET /"] = function (request, response) {
 
 warblers["GET /warbles"] = function (request, response) {
 	fs.readFile('data.json', function (err, data){
-		console.log("type of data" + typeof data.toString());
 		response.write(JSON.stringify(data));
 	});
 	response.end();
@@ -22,15 +21,15 @@ warblers["POST /warbles"] = function (request, response) {
 	var result = [];
 	var timestamp = '';
 	request.on('data', function(chunkTimestamp){
-		timestamp += chunk.toString();
+		timestamp += chunkTimestamp.toString();
+		fs.readFile('data.json', function (err, data){
+			for(var i =0; i < data.length; i++){
+				if(data[i].timestamp.toString() !== timestamp){
+					result.unshift(data[i]);
+					break;
+				}
+		  }
 	});
-
-	request.on('end', function(){
-		for(var i =0; i < result.length; i++){
-			if(listWarbles[i].timestamp.toString() !== timestamp){
-				result.unshift(listWarbles[i]);
-			}
-		}
 		response.write(JSON.stringify(result));
 		response.end();
 	});
@@ -48,13 +47,11 @@ warblers["POST /create"] = function (request, response) {
 
 	request.on('end', function(){
 		newWarble = JSON.parse(warbleString);
-		listWarbles.push(newWarble);
+		//listWarbles.unshift(newWarble);
 
 		//read file
 		fs.readFile('data.json', function (err, data){
 			wrablersData = JSON.parse(data);
-			console.log(wrablersData);
-			console.log(typeof wrablersData);
 			wrablersData.unshift(newWarble);
 			//write the new data
 			fs.writeFile('data.json', JSON.stringify(wrablersData), function (err) {
