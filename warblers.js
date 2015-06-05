@@ -40,18 +40,18 @@ warblers["POST /create"] = function (request, response) {
 	var wrablersData;
 	var newWarble;
 	request.on('data', function(chunk){
-	    warbleString += chunk.toString();
+		warbleString += chunk.toString();
 	});
 
 	request.on('end', function(){
-	    newWarble = JSON.parse(warbleString);
-	    var dataFromFile = require(__dirname + '/data.json');
-	    dataFromFile.unshift(newWarble);
-	    fs.writeFile('data.json', JSON.stringify(dataFromFile), function (err) {
-	        console.log('It\'s saved!');
+		newWarble = JSON.parse(warbleString);
+		var dataFromFile = require(__dirname + '/data.json');
+		dataFromFile.unshift(newWarble);
+		fs.writeFile('data.json', JSON.stringify(dataFromFile), function (err) {
+			console.log('It\'s saved!');
 
-	    });
-	    response.end('string');
+		});
+		response.end('string');
 	});
 };
 
@@ -65,7 +65,7 @@ warblers.generic = function (request, response){
 			});
 		} else {
 			var ext = request.url.split('.')[1];
-      response.writeHead(200, {'Content-Type' : 'text/' + ext});
+	  response.writeHead(200, {'Content-Type' : 'text/' + ext});
 			response.write(data.toString());
 			response.end();
 		}
