@@ -16,7 +16,7 @@ function Warble(content) {
 }
 
 function addWarble(data) {
-	return "<li class='warble'>" + data.content + "Warbled at " + data.timestamp + "</li>";
+	return "<li class='warble'>" + data.content + "<br/>" + "<span id='date'>" + "Warbled at " + new Date(data.timestamp).toString().slice(0, 24) + "</span>" + "</li>";
 	//todo add delete button once its ready
 }
 
@@ -49,7 +49,7 @@ $("#warbleSubmit").click(function () {
 
 $("#userWarbles").click(function() {
     $("#userStream").toggle();
-    if ($("#userWarbles").text() == "My Warbles") {
+    if ($("#userWarbles").text() === "My Warbles") {
         $("#userWarbles").text("All");
         $("#publicStream").css("display","none");
     }
