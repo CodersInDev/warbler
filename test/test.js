@@ -31,4 +31,26 @@ Shot.inject(server, { method: 'GET', url: '/warbles'}, function (res){
 });
 // console.log('end of test');
 
-// console.log('submit ')
+console.log('Test POST /warbles - gets the newest warbles and returns them in an array');
+Shot.inject(server, {method: "POST", url: "/warbles"}, function (res) {
+	assert.equal(Object.prototype.toString.call(res.payload), "[object Array]");
+});
+
+// console.log('Test POST /create - storing a new warble and stores it in a file');
+// Shot.inject(server, {method: "POST", url: "/create", payload: {content: "TEST TEST TEST"}}, function (res) {
+// 	// // assert.equal(JSON.parge(res.payload).content, "");
+// 	console.log(res.payload);
+// 	// // console.log("testWarble is ", testWarble);
+// 	// assert.equal(testWarble, "TESTMESSAGE");
+// 	// console.log("Test message successfully submitted to server");
+// 	// var warbleData = require('../data.json');
+// 	// assert.equal(warbleData[warbleData.length - 1].content, "TESTMESSAGE");
+// 	// console.log("Test message successfully stored in data.json");
+// });
+
+// console.log("checking if warbles.generic sends the right file according to the request.url");
+// Shot.inject(server, {method: "generic", url: "../css/mobile-first.css"}, function (res) {
+// 	console.log(res.payload);
+// });
+
+
