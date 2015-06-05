@@ -1,14 +1,3 @@
-@font-face {
-  font-family: 'fontello';
-  src: url('../fonts/fontello.eot');
-  src: url('../fonts/fontello.eot?#iefix') format('embedded-opentype'),
-       url('../fonts/fontello.woff') format('woff'),
-       url('../fonts/fontello.ttf') format('truetype'),
-       url('../fonts/fontello.svg#fontello') format('svg');
-  font-weight: normal; font-style: normal;
-}
-
-
 /************Reset**************/
 html, body, div, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, ol, ul, li, form, fieldset, legend, label, table, header, footer, nav, section {
     margin: 0;
@@ -35,13 +24,14 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
-    background: #f7f7f7;
+    font-size:1em;
+    background: #E8ECED;
 }
 
 header {
     width: 100%;
     height: 60px;
-    background: red;
+    background-color: rgb(53, 155, 218);
     position: fixed;
     top: 0;
 }
@@ -49,24 +39,16 @@ header {
 #content {
     width: 100%;
     margin: 60px auto;
-    /*padding: 60px 0;*/
-    background: #bada55;
+    /*padding: 60px 0;*/    
 }
 
 footer {
     width: 100%;
-    background: green;
-    /*height: 80px;*/
-    /*background: red;*/
     position: fixed;
     bottom: 0;
-    /*border-top:1px solid orange;*/
     z-index: 999;
 }
 
-li {
-    font-size: 4em;
-}
 /***********Header******************/
 #userWarbles {
     display: inline-block;
@@ -84,19 +66,53 @@ li {
     padding: 3px 10px;
 }
 
-/***********Footer******************/
-textarea {
-    width: 100%;
+/***********Warbles list******************/
+li {
+    background: #E8ECED;
+    border-top: 1px solid #C7D3D0;
+    border-bottom: 1px solid #C9D5D5;
+    cursor: pointer;
+    font-size: 2em;
+    list-style-type: none;
+    padding: 5px;
+    color: #383737;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif; */
 }
+
+/***********end of warbles list******************/
+
+/***********Footer Input box******************/
 #warbleBox {
     height: 70px;
-    width: 100%;
+    width: 98%;
+    font-size: 2em;
 }
-#warbleSubmit {
-    float: right;
-    font-size: 3.8em;
-}
+
 .wrap {
     overflow: hidden;
-    padding-right: .5em;
+    padding-right: .8em;
+}
+
+#warbleBox{
+    background-color: #E3EDF5;
+    border: 1px solid #ccc;
+    outline: none; 
+}
+ 
+#warbleBox:focus{
+    border: 2px solid #56b4ef;
+    box-shadow: 0px 0px 3px 1px #c5def0;
+}
+
+#warbleSubmit {
+    float: right;
+    font-size: 4em;
+    background-color: rgb(44, 125, 216);
+    border-color: rgb(44, 125, 216);
+}
+
+#warbleSubmit:hover {
+    background-color: rgb(143, 182, 224);
+    border: none;
 }
