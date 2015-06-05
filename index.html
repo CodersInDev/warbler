@@ -4,28 +4,39 @@
 	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	  <title>Warble on the world wide web</title>
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-	  <link rel='stylesheet' href='style.css'>
+		<link rel="stylesheet" type="text/css" href="css/mobile-first.css" media="screen, handheld" />
+    	<link rel="stylesheet" type="text/css" href="css/enhanced.css" media="screen  and (min-width: 48em)"/>
+    	<link href="http://fonts.googleapis.com/css?family=Raleway:400,300,700" rel="stylesheet" type="text/css">
+	  <!-- <link rel='stylesheet' href='style.css'> -->
 	</head>
 
 	<body>
+		<header>
+			<div id="userWarbles"><p>My Warbles</p></div>
+			<div id="userProfile"><p>My profile</p></div>
+		</header>
+		<div id="content">
+			<div id="userStream" style="display:none;">
+				<span>This is your walled warble stream</span>
+			</div>
 
-		<div id="userStream" class="column">
-			<span>This is your walled warble stream</span>
+			<div id="publicStream">
+
+				<!-- <span>This is the worldwide warble stream</span> -->
+				<ul id="listWarbles"></ul>			
 		</div>
+		<footer>
+			<div id="warbleWrap">
+				<input id="warbleSubmit" type="button" value="Send"/>
+			 	<div class="wrap">
+			    	<input id="warbleBox" type="text" placeholder="What's happening?" />
+			   	</div>
 
-		<div id="publicStream" class="column">
+				<!-- <textarea id="warbleBox" maxlength="141"></textarea>
 
-			<span>This is the worldwide warble stream</span>
-			<ul id="listWarbles"></ul> 
-
-		</div>
-
-		<div id="warbleWrap" class="column">
-
-			<textarea id="warbleBox" maxlength="141"></textarea>
-
-			<input id='warbleSubmit' type="button" value="Warble to the world">
-		</div>
+				<input id='warbleSubmit' type="button" value="Warble to the world"> -->
+			</div>
+		</footer>
 
 
 	</body>
