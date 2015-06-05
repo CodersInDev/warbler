@@ -1,0 +1,118 @@
+/************Reset**************/
+html, body, div, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, ol, ul, li, form, fieldset, legend, label, table, header, footer, nav, section {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+header, footer, nav, section, article, hgroup, figure {
+    display: block;
+}
+
+legend {
+    display: none;
+}
+/************End Reset**************/
+
+/************Global**************/
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-size:1em;
+    background: #E8ECED;
+}
+
+header {
+    width: 100%;
+    height: 60px;
+    background-color: rgb(53, 155, 218);
+    position: fixed;
+    top: 0;
+}
+
+#content {
+    width: 100%;
+    margin: 60px auto;
+    /*padding: 60px 0;*/    
+}
+
+footer {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    z-index: 999;
+}
+
+/***********Header******************/
+#userWarbles {
+    display: inline-block;
+    float:left;
+    color: yellow;
+    font-size: 2.5em;
+    padding: 3px 10px;
+}
+
+#userProfile {
+    display: inline-block;
+    float:right;
+    color: yellow;
+    font-size: 2.5em;
+    padding: 3px 10px;
+}
+
+/***********Warbles list******************/
+li {
+    background: #E8ECED;
+    border-top: 1px solid #C7D3D0;
+    border-bottom: 1px solid #C9D5D5;
+    cursor: pointer;
+    font-size: 2em;
+    list-style-type: none;
+    padding: 5px;
+    color: #383737;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif; */
+}
+
+/***********end of warbles list******************/
+
+/***********Footer Input box******************/
+#warbleBox {
+    height: 70px;
+    width: 98%;
+    font-size: 2em;
+}
+
+.wrap {
+    overflow: hidden;
+    padding-right: .8em;
+}
+
+#warbleBox{
+    background-color: #E3EDF5;
+    border: 1px solid #ccc;
+    outline: none; 
+}
+ 
+#warbleBox:focus{
+    border: 2px solid #56b4ef;
+    box-shadow: 0px 0px 3px 1px #c5def0;
+}
+
+#warbleSubmit {
+    float: right;
+    font-size: 4em;
+    background-color: rgb(44, 125, 216);
+    border-color: rgb(44, 125, 216);
+}
+
+#warbleSubmit:hover {
+    background-color: rgb(143, 182, 224);
+    border: none;
+}
