@@ -58,6 +58,9 @@ footer {
     padding: 3px 10px;
 }
 
+#userWarbles > p, #userProfile > p {
+    cursor: pointer;
+}
 #userProfile {
     display: inline-block;
     float:right;
@@ -78,6 +81,11 @@ li {
     color: #383737;
     cursor: pointer;
     font-family: 'Raleway', sans-serif; */
+}
+
+#date {
+    color: rgb(181, 163, 163);
+    font-size: 10px;
 }
 
 /***********end of warbles list******************/
@@ -114,5 +122,5 @@ li {
 
 #warbleSubmit:hover {
     background-color: rgb(143, 182, 224);
-    border: none;
+    
 }
