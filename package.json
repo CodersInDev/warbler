@@ -22,5 +22,8 @@
   },
   "pre-commit": [
     "jshint"
-  ]
+  ],
+  "dependencies": {
+    "redis": "^0.12.1"
+  }
 }

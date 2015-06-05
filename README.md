@@ -31,14 +31,18 @@ This will install the correct version of the relevant dependencies so you can ru
 
 ### Now load the page  
 ```npm run nodemon```  
- 
+
 http://localhost:8000
+
+### Redis
+
+install redis and node_redis. Load redis with ```redis-server```
 
 ### The app has the following functions:  
 
 * [x] Create a new warble by typing in the box and hitting the button  
- * [x] This will send your warble to the server, 
- * [ ] update your personal warble stream with your new warble, and 
- * [ ] update the public warble stream with warbles from other warblers on the worldwide web by refreshing the page 
+ * [x] This will send your warble to the server,
+ * [ ] update your personal warble stream with your new warble, and
+ * [ ] update the public warble stream with warbles from other warblers on the worldwide web by refreshing the page
 * [ ] Update the public warble stream every 30 seconds
 * [ ] Allow the original warbler (and only the original warbler) to delete her warbles
