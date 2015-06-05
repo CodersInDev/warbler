@@ -39,9 +39,7 @@ $("#warbleSubmit").click(function () {
 	var warble = new Warble( $("#warbleBox").val());
 	console.log(warble);
 	if ($("#warbleBox").val().length !== 0 ){
-		$.post("/create",JSON.stringify(warble), function () {
-			$("#publicStream").prepend(addWarble(warble));
-		});
+		$.post("/create",JSON.stringify(warble));
 		$("#warbleBox").val('');
 	}
 });
@@ -49,7 +47,7 @@ $("#warbleSubmit").click(function () {
 
 $("#userWarbles").click(function() {
     $("#userStream").toggle();
-    if ($("#userWarbles").text() == "My Warbles") {
+    if ($("#userWarbles").text() === "My Warbles") {
         $("#userWarbles").text("All");
         $("#publicStream").css("display","none");
     }
@@ -58,3 +56,4 @@ $("#userWarbles").click(function() {
         $("#publicStream").css("display","block");
     }
 });
+
