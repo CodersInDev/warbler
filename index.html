@@ -41,7 +41,25 @@
 
 	</body>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="script.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    
+    <script>
+
+      var socket = io();
+
+      $('#warbleSubmit').click(function(){
+		socket.emit('warble', $('#warbleBox').val());
+		return false;
+	  });
+
+		socket.on('warble', function(msg){
+	$("#publicStream").prepend("<li class='warble'>" + msg + "<br/>" + "<span id='date'>" + "Warbled at " + new Date().toString().slice(0, 24) + "</span>" + "</li>");
+});
+
+    </script>
+    
+	<script src="script.js"></script>
 
 </html>

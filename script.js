@@ -39,13 +39,22 @@ $("#warbleSubmit").click(function () {
 	var warble = new Warble( $("#warbleBox").val());
 	console.log(warble);
 	if ($("#warbleBox").val().length !== 0 ){
-		$.post("/create",JSON.stringify(warble), function () {
-			$("#publicStream").prepend(addWarble(warble));
-		});
+		$.post("/create",JSON.stringify(warble));
 		$("#warbleBox").val('');
 	}
 });
 
+
+var warbleBox = document.getElementById('warbleBox');
+var warbleSubmit = document.getElementById('warbleSubmit');
+//if enter key is pressed, stop page refreshing and simulate button click
+warbleBox.addEventListener("keypress", function(e) {
+	e = e || window.event;
+	if (e.keyCode === 13) {
+		e.preventDefault();
+		warbleSubmit.click();
+	}
+});
 
 $("#userWarbles").click(function() {
     $("#userStream").toggle();
@@ -58,3 +67,4 @@ $("#userWarbles").click(function() {
         $("#publicStream").css("display","block");
     }
 });
+
