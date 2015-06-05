@@ -80,6 +80,11 @@ li {
     font-family: 'Raleway', sans-serif; */
 }
 
+#date {
+    color: rgb(181, 163, 163);
+    font-size: 10px;
+}
+
 /***********end of warbles list******************/
 
 /***********Footer Input box******************/
