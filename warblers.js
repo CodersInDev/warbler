@@ -17,30 +17,6 @@ warblers["GET /warbles"] = function (request, response) {
 		  response.write('[' + res.toString() + ']');
 			response.end();
 	});
-
-	//scan function return [iteratorNum, [list of timestamp]]
-	//getArryTimestamp();
-	// client.scan(0,function(err, result){
-	// 	var checkIterator = 0;
-	// 	result[1].forEach(function(timestamp){
-	// 		client.get(timestamp, function(err, warble){
-	// 			warbles.push(JSON.parse(warble));
-	// 			checkIterator++;
-	// 			if(checkIterator === result[1].length){
-	// 				response.write(JSON.stringify(warbles));
-	// 				response.end();
-	// 			}
-	// 		});
-	// 	});
-	// });
-
-	// client.get("myKey",function(err, result){
-	// 	if(err){
-	// 		console.log(err);
-	// 	}
-	// 	console.log("valeur " + result);
-
-	// });
 };
 
 warblers["POST /warbles"] = function (request, response) {
@@ -63,34 +39,23 @@ warblers["POST /warbles"] = function (request, response) {
 };
 
 
-function getArryTimestamp(){
-	client.get('timestamp', function(err, resp){
-	});
-}
-
-
 warblers["POST /create"] = function (request, response) {
 	//create a warbles and save it in a file
 	var warbleString = '';
 	var wrablersData;
 	var newWarble;
 	request.on('data', function(chunk){
-	    warbleString += chunk.toString();
+		warbleString += chunk.toString();
 	});
 
 request.on('end', function(){
 		var obj = JSON.parse(warbleString);
-		  //save the warble in redis as a timestamp:jsonStringWarble
-	  	// client.set(obj.timestamp.toString(), warbleString, function(err, res){
-			// 	if(err){console.log(err);}
-			// 	console.log("key saved");
-			// });
-
 			client.zadd('warbles', obj.timestamp , warbleString ,function(err, res){
 				if(err){console.log(err);}
 				console.log("key saved");
 			});
 	    response.end('new wrable saved');
+
 	});
 };
 
@@ -104,7 +69,7 @@ warblers.generic = function (request, response){
 			});
 		} else {
 			var ext = request.url.split('.')[1];
-      response.writeHead(200, {'Content-Type' : 'text/' + ext});
+	  response.writeHead(200, {'Content-Type' : 'text/' + ext});
 			response.write(data.toString());
 			response.end();
 		}
