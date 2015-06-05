@@ -50,13 +50,12 @@
       var socket = io();
 
       $('#warbleSubmit').click(function(){
-	socket.emit('warble', $('#warbleBox').val());
-	return false;
-});
+		socket.emit('warble', $('#warbleBox').val());
+		return false;
+	  });
 
-socket.on('warble', function(msg){
-	console.log("socket firing")
-	$("#publicStream").prepend("<li class='warble'>" + msg + "Warbled at " + new Date().getTime() + "</li>");
+		socket.on('warble', function(msg){
+	$("#publicStream").prepend("<li class='warble'>" + msg + "<br/>" + "<span id='date'>" + "Warbled at " + new Date().toString().slice(0, 24) + "</span>" + "</li>");
 });
 
     </script>
