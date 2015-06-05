@@ -58,6 +58,9 @@ footer {
     padding: 3px 10px;
 }
 
+#userWarbles > p, #userProfile > p {
+    cursor: pointer;
+}
 #userProfile {
     display: inline-block;
     float:right;
@@ -119,5 +122,5 @@ li {
 
 #warbleSubmit:hover {
     background-color: rgb(143, 182, 224);
-    border: none;
+    
 }
