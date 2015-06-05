@@ -47,3 +47,14 @@ $("#warbleSubmit").click(function () {
 });
 
 
+$("#userWarbles").click(function() {
+    $("#userStream").toggle();
+    if ($("#userWarbles").text() === "My Warbles") {
+        $("#userWarbles").text("All");
+        $("#publicStream").css("display","none");
+    }
+    else {
+        $("#userWarbles").text("My Warbles");
+        $("#publicStream").css("display","block");
+    }
+});
