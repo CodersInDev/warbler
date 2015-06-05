@@ -30,3 +30,5 @@ Shot.inject(server, { method: 'GET', url: '/warbles'}, function (res){
     assert.equal(typeof res.payload, "string");
 });
 // console.log('end of test');
+
+// console.log('submit ')
