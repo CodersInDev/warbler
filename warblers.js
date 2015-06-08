@@ -1,18 +1,22 @@
 var listWarbles = [];
 var warblers = {};
 var fs = require('fs');
+var redis = require('redis');
+var client = redis.createClient();
 
 warblers["GET /"] = function (request, response) {
 	fs.readFile(__dirname + "/index.html", function (err, data){
-		response.write(data.toString());
-		response.end();
-	});
+	  response.write(data.toString());
+	  response.end();
+  });
 };
 
 warblers["GET /warbles"] = function (request, response) {
-	var dataFromFile = require(__dirname + '/data.json');
-	response.write(JSON.stringify(dataFromFile));
-	response.end();
+	client.zrange('warbles', 0, -1, function(err, res){
+		  var resultat = res.reverse();
+		  response.write('[' + res.toString() + ']');
+			response.end();
+	});
 };
 
 warblers["POST /warbles"] = function (request, response) {
@@ -34,24 +38,24 @@ warblers["POST /warbles"] = function (request, response) {
 	});
 };
 
+
 warblers["POST /create"] = function (request, response) {
 	//create a warbles and save it in a file
 	var warbleString = '';
 	var wrablersData;
 	var newWarble;
 	request.on('data', function(chunk){
-	    warbleString += chunk.toString();
+		warbleString += chunk.toString();
 	});
 
-	request.on('end', function(){
-	    newWarble = JSON.parse(warbleString);
-	    var dataFromFile = require(__dirname + '/data.json');
-	    dataFromFile.unshift(newWarble);
-	    fs.writeFile('data.json', JSON.stringify(dataFromFile), function (err) {
-	        console.log('It\'s saved!');
+request.on('end', function(){
+		var obj = JSON.parse(warbleString);
+			client.zadd('warbles', obj.timestamp , warbleString ,function(err, res){
+				if(err){console.log(err);}
+				console.log("key saved");
+			});
+	    response.end('new wrable saved');
 
-	    });
-	    response.end('string');
 	});
 };
 
@@ -65,7 +69,7 @@ warblers.generic = function (request, response){
 			});
 		} else {
 			var ext = request.url.split('.')[1];
-      response.writeHead(200, {'Content-Type' : 'text/' + ext});
+	  response.writeHead(200, {'Content-Type' : 'text/' + ext});
 			response.write(data.toString());
 			response.end();
 		}
