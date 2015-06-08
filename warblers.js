@@ -2,7 +2,12 @@ var listWarbles = [];
 var warblers = {};
 var fs = require('fs');
 var redis = require('redis');
-var client = redis.createClient();
+// var client = redis.createClient();
+
+var url = require('url');
+var redisURL = url.parse(process.env.REDISCLOUD_URL);
+var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
+client.auth(redisURL.auth.split(":")[1]);
 
 warblers["GET /"] = function (request, response) {
 	fs.readFile(__dirname + "/index.html", function (err, data){
