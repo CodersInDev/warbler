@@ -9,16 +9,16 @@ var redisURL = url.parse(process.env.REDIS_URL);
 var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
 client.auth(redisURL.auth.split(":")[1]);
 
-warblers["GET /"] = function (request, response) {
-  response.end("hello");
-};
-
 // warblers["GET /"] = function (request, response) {
-// 	fs.readFile(__dirname + "/index.html", function (err, data){
-// 	  response.write(data.toString());
-// 	  response.end();
-//   });
+//   response.end("hello");
 // };
+
+warblers["GET /"] = function (request, response) {
+	fs.readFile(__dirname + "/index.html", function (err, data){
+	  response.write(data.toString());
+	  response.end();
+  });
+};
 
 warblers["GET /warbles"] = function (request, response) {
 	client.zrange('warbles', 0, -1, function(err, res){
