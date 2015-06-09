@@ -1,81 +1,67 @@
+window.onload = function(){
+	handlerGet();
+	if(localStorage.getItem("warblerBrowserID") === undefined) {
+		localStorage.setItem("warblerBrowserID", Math.random().toString());
+	}
+};
 
 var socket = io();
 
-$('#warbleSubmit').click(function(){
-	socket.emit('warble', $('#warbleBox').val());
+$('#warbleForm').submit(function(e){
+	e.preventDefault();
+	var warble = new Warble($("#warbleBox").val());
+	var warbleString = JSON.stringify(warble);
+	socket.emit('warble', warbleString);
+	
+	if ($("#warbleBox").val().length){
+		$.post("/create", warbleString);
+		$("#warbleBox").val('');
+	}
 	return false;
 });
 
-socket.on('warble', function(msg){
-	$("#publicStream").prepend("<li class='warble'>" + msg + "<br/>" + "<span id='date'>" + "Warbled at " + new Date().toString().slice(0, 24) + "</span>" + "</li>");
-	$("#userStream").prepend("<li class='warble'>" + msg + "<br/>" + "<span id='date'>" + "Warbled at " + new Date().toString().slice(0, 24) + "</span>" + "</li>");
+socket.on('warble', function(data){
+	var warble = JSON.parse(data);
+	$("#publicStream").prepend(addWarble(warble));
+	if (warble.user === localStorage.getItem("warblerBrowserID")) {
+		$("#userStream").prepend(addWarble(warble));
+	}
 });
 
 
-var browserID = Math.random().toString();
-
-if(localStorage.getItem("browserID") === undefined) {
-	localStorage.setItem("browserID", browserID);
-}
-
-var warbleArray = [];
-
-//on document load, GET all warbles from array
-
 function Warble(content) {
 	this.content = content;
-	this.timestamp = new Date().getTime();
-	this.user = localStorage.getItem("browserID");
+	this.timestamp = Date.now();
+	this.user = localStorage.getItem("warblerBrowserID");
 	this.deleted = false;
 }
 
 function addWarble(data) {
-	return "<li class='warble'>" + data.content + "<br/>" + "<span id='date'>" + "Warbled at " + new Date(data.timestamp).toString().slice(0, 24) + "</span>" + "</li>";
-	//todo add delete button once its ready
+	var unWarble = data.user === localStorage.getItem("warblerBrowserID") ? "<input type='button' class='unwarble' value='UnWarble'>" : "";
+	return "<li class='warble'>" + 
+	data.content + 
+	"<br/><span class='date' id='" + data.timestamp + "'>Warbled at " + 
+	new Date(data.timestamp).toString().slice(0, 24) + 
+	"</span>" + unWarble + "</li>";
 }
 
 function handlerGet () {
 	$.get("/warbles", function handler(data){
 		var warbles = JSON.parse(data);
-		var newWarblesDOM = '';
-		var user;
-		var userList;
+		var worldWarblesDOM = "";
+		var userWarblesDOM = "";
+		
 		for (var i = 0; i < warbles.length; i++) {
-			newWarblesDOM += addWarble(warbles[i]);
+			worldWarblesDOM += addWarble(warbles[i]);
+			if (warbles[i].user === localStorage.getItem("warblerBrowserID")) {
+				userWarblesDOM += addWarble(warbles[i]);
+			}
 		} 
-		user = warbles.filter(function(a){
-			return a.user === localStorage.getItem("browserID");
-		});
-		userList = user.map(addWarble);
-		$("#publicStream").prepend(newWarblesDOM);
-		$("#userStream").prepend(userList);
+
+		$("#publicStream").prepend(worldWarblesDOM);
+		$("#userStream").prepend(userWarblesDOM);
 	});
 }
-
-window.onload = function(){
-	handlerGet();
-};
-
-$("#warbleSubmit").click(function () {
-	var warble = new Warble( $("#warbleBox").val());
-	console.log(warble);
-	if ($("#warbleBox").val().length !== 0 ){
-		$.post("/create",JSON.stringify(warble));
-		$("#warbleBox").val('');
-	}
-});
-
-
-var warbleBox = document.getElementById('warbleBox');
-var warbleSubmit = document.getElementById('warbleSubmit');
-//if enter key is pressed, stop page refreshing and simulate button click
-warbleBox.addEventListener("keypress", function(e) {
-	e = e || window.event;
-	if (e.keyCode === 13) {
-		e.preventDefault();
-		warbleSubmit.click();
-	}
-});
 
 $("#userWarbles").click(function() {
     $("#userStream").toggle();
