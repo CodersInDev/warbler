@@ -1,3 +1,17 @@
+
+var socket = io();
+
+$('#warbleSubmit').click(function(){
+	socket.emit('warble', $('#warbleBox').val());
+	return false;
+});
+
+socket.on('warble', function(msg){
+	$("#publicStream").prepend("<li class='warble'>" + msg + "<br/>" + "<span id='date'>" + "Warbled at " + new Date().toString().slice(0, 24) + "</span>" + "</li>");
+	$("#userStream").prepend("<li class='warble'>" + msg + "<br/>" + "<span id='date'>" + "Warbled at " + new Date().toString().slice(0, 24) + "</span>" + "</li>");
+});
+
+
 var browserID = Math.random().toString();
 
 if(localStorage.getItem("browserID") === undefined) {
@@ -24,10 +38,17 @@ function handlerGet () {
 	$.get("/warbles", function handler(data){
 		var warbles = JSON.parse(data);
 		var newWarblesDOM = '';
+		var user;
+		var userList;
 		for (var i = 0; i < warbles.length; i++) {
 			newWarblesDOM += addWarble(warbles[i]);
-		}
+		} 
+		user = warbles.filter(function(a){
+			return a.user === localStorage.getItem("browserID");
+		});
+		userList = user.map(addWarble);
 		$("#publicStream").prepend(newWarblesDOM);
+		$("#userStream").prepend(userList);
 	});
 }
 
@@ -58,13 +79,15 @@ warbleBox.addEventListener("keypress", function(e) {
 
 $("#userWarbles").click(function() {
     $("#userStream").toggle();
-    if ($("#userWarbles").text() === "My Warbles") {
-        $("#userWarbles").text("All");
-        $("#publicStream").css("display","none");
+    if ($("#userWarbles").text() === "Your Warbles") {
+        $("#userWarbles").text("Worldwide Warbles");
+        $("#publicStream").css("display","block");
+        $("#userStream").css("display","none");
     }
     else {
-        $("#userWarbles").text("My Warbles");
-        $("#publicStream").css("display","block");
+        $("#userWarbles").text("Your Warbles");
+        $("#publicStream").css("display","none");
+        $("#userStream").css("display","block");
     }
 });
 
