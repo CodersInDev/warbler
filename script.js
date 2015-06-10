@@ -1,70 +1,83 @@
-var browserID = Math.random().toString();
+window.onload = function(){
+	handlerGet();
+	if(localStorage.getItem("warblerBrowserID") === undefined) {
+		localStorage.setItem("warblerBrowserID", Math.random().toString());
+	}
+	leaflet.showMap();
+};
 
-if(localStorage.getItem("browserID") === undefined) {
-	localStorage.setItem("browserID", browserID);
-}
+var socket = io();
 
-var warbleArray = [];
+$('#warbleForm').submit(function(e){
+	e.preventDefault();
+	var warble = new Warble($("#warbleBox").val());
+	navigator.geolocation.getCurrentPosition(function(position){
+		warble.latitude = position.coords.latitude;
+		warble.longitude = position.coords.longitude;
+	});
+	var warbleString = JSON.stringify(warble);
+	socket.emit('warble', warbleString);
 
-//on document load, GET all warbles from array
+	if ($("#warbleBox").val().length){
+		$.post("/create", warbleString);
+		$("#warbleBox").val('');
+	}
+	return false;
+});
+
+socket.on('warble', function(data){
+	var warble = JSON.parse(data);
+	$("#publicStream").prepend(addWarble(warble));
+	if (warble.user === localStorage.getItem("warblerBrowserID")) {
+		$("#userStream").prepend(addWarble(warble));
+	}
+});
 
 function Warble(content) {
 	this.content = content;
-	this.timestamp = new Date().getTime();
-	this.user = localStorage.getItem("browserID");
+	this.timestamp = Date.now();
+	this.user = localStorage.getItem("warblerBrowserID");
 	this.deleted = false;
+	this.latitude = leaflet.latitude;
+	this.longitude = leaflet.longitude;
 }
 
 function addWarble(data) {
-	return "<li class='warble'>" + data.content + "<br/>" + "<span id='date'>" + "Warbled at " + new Date(data.timestamp).toString().slice(0, 24) + "</span>" + "</li>";
-	//todo add delete button once its ready
+	var unWarble = data.user === localStorage.getItem("warblerBrowserID") ? "<input type='button' class='unwarble' value='UnWarble'>" : "";
+	return "<li class='warble'>" + data.content +
+	"<br/><span class='date' id='" + data.timestamp + "'>Warbled at " +
+	new Date(data.timestamp).toString().slice(0, 24) + " Located at: " + data.latitude + ", " + data.longitude +
+	"</span>" + unWarble + "</li>";
 }
 
 function handlerGet () {
 	$.get("/warbles", function handler(data){
 		var warbles = JSON.parse(data);
-		var newWarblesDOM = '';
+		var worldWarblesDOM = "";
+		var userWarblesDOM = "";
+
 		for (var i = 0; i < warbles.length; i++) {
-			newWarblesDOM += addWarble(warbles[i]);
+			worldWarblesDOM += addWarble(warbles[i]);
+			if (warbles[i].user === localStorage.getItem("warblerBrowserID")) {
+				userWarblesDOM += addWarble(warbles[i]);
+			}
 		}
-		$("#publicStream").prepend(newWarblesDOM);
+
+		$("#publicStream").prepend(worldWarblesDOM);
+		$("#userStream").prepend(userWarblesDOM);
 	});
 }
 
-window.onload = function(){
-	handlerGet();
-};
-
-$("#warbleSubmit").click(function () {
-	var warble = new Warble( $("#warbleBox").val());
-	console.log(warble);
-	if ($("#warbleBox").val().length !== 0 ){
-		$.post("/create",JSON.stringify(warble));
-		$("#warbleBox").val('');
-	}
-});
-
-
-var warbleBox = document.getElementById('warbleBox');
-var warbleSubmit = document.getElementById('warbleSubmit');
-//if enter key is pressed, stop page refreshing and simulate button click
-warbleBox.addEventListener("keypress", function(e) {
-	e = e || window.event;
-	if (e.keyCode === 13) {
-		e.preventDefault();
-		warbleSubmit.click();
-	}
-});
-
 $("#userWarbles").click(function() {
     $("#userStream").toggle();
-    if ($("#userWarbles").text() === "My Warbles") {
-        $("#userWarbles").text("All");
-        $("#publicStream").css("display","none");
+    if ($("#userWarbles").text() === "Your Warbles") {
+        $("#userWarbles").text("Worldwide Warbles");
+        $("#publicStream").css("display","block");
+        $("#userStream").css("display","none");
     }
     else {
-        $("#userWarbles").text("My Warbles");
-        $("#publicStream").css("display","block");
+        $("#userWarbles").text("Your Warbles");
+        $("#publicStream").css("display","none");
+        $("#userStream").css("display","block");
     }
 });
-

@@ -34,6 +34,17 @@ This will install the correct version of the relevant dependencies so you can ru
 
 http://localhost:8000
 
+### Request flow
+
+#### Create a server
+Our server is create with the http method createServer. This method take one parameter which is a requestListener. a requestListener is a function wich is called each time a request is trigger (by the browser). A requestListerner takes this form:
+
+```javascript
+function(request, response){//do something when a request is sent}
+```
+Our requestListener need to be able to manage all kind of request and endpoints (/create /wrables ...). We going to create a new function which will contain all our logic and allow us to respond properly to each http requests.  
+
+
 ### Redis
 
 install redis and node_redis. Load redis with ```redis-server```
