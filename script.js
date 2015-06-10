@@ -11,14 +11,11 @@ var socket = io();
 $('#warbleForm').submit(function(e){
 	e.preventDefault();
 	var warble = new Warble($("#warbleBox").val());
-	// navigator.geolocation.getCurrentPosition(function(position){
-	// 	warble.latitude = position.coords.latitude;
-	// 	warble.longitude = position.coords.longitude;
-	// });
 	var warbleString = JSON.stringify(warble);
 	socket.emit('warble', warbleString);
 	leaflet.createMarker(warble);
-	
+	var locationFormat = fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + leaflet.latitude + '&lon=' + leaflet.longitude + '&zoom=18&addressdetails=1', returnData);
+	console.log(locationFormat);
 	if ($("#warbleBox").val().length){
 		$.post("/create", warbleString);
 		$("#warbleBox").val('');
@@ -33,6 +30,28 @@ socket.on('warble', function(data){
 		$("#userStream").prepend(addWarble(warble));
 	}
 });
+
+function fetchJSONFile(url, returnData) {
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function() {
+		if (request.readyState === 4) {
+			if (request.status === 200) {
+				var data = JSON.parse(request.responseText);
+				if (typeof returnData === "function") {
+					returnData(data);
+				}
+			}
+		}
+	};
+	request.open("GET", url, true);
+	request.send();
+}
+
+function returnData(jsonData) {
+	var suburb = jsonData.address.suburb;
+	var city = jsonData.address.city;
+	console.log(suburb);
+}
 
 function Warble(content) {
 	this.content = content;
