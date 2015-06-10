@@ -19,7 +19,7 @@ warblers["GET /warbles"] = function (request, response) {
 	// client.zrange('warbles', 0, -1, function(err, res){
 		  // var resultat = res.reverse();
 		  var arr = [];
-		db.createValueStream()
+		db.createValueStream({"reverse" : true})
   		.on('data', function (data) {
 		    arr.push(data);
 		})
