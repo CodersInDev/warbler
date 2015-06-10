@@ -10,6 +10,10 @@ var socket = io();
 $('#warbleForm').submit(function(e){
 	e.preventDefault();
 	var warble = new Warble($("#warbleBox").val());
+	navigator.geolocation.getCurrentPosition(function(position){
+		warble.latitude = position.coords.latitude;
+		warble.longitude = position.coords.longitude;
+	});
 	var warbleString = JSON.stringify(warble);
 	socket.emit('warble', warbleString);
 	
@@ -28,9 +32,10 @@ socket.on('warble', function(data){
 	}
 });
 
-
 function Warble(content) {
 	this.content = content;
+	this.latitude = 0; //set to 0 because jslinter complain 
+	this.longitude = 0; //set to 0 because jslinter complain 
 	this.timestamp = Date.now();
 	this.user = localStorage.getItem("warblerBrowserID");
 	this.deleted = false;
@@ -38,8 +43,7 @@ function Warble(content) {
 
 function addWarble(data) {
 	var unWarble = data.user === localStorage.getItem("warblerBrowserID") ? "<input type='button' class='unwarble' value='UnWarble'>" : "";
-	return "<li class='warble'>" + 
-	data.content + 
+	return "<li class='warble'>" + data.latitude + data.longitude + data.content + 
 	"<br/><span class='date' id='" + data.timestamp + "'>Warbled at " + 
 	new Date(data.timestamp).toString().slice(0, 24) + 
 	"</span>" + unWarble + "</li>";
