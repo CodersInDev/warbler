@@ -3,6 +3,7 @@ window.onload = function(){
 	if(localStorage.getItem("warblerBrowserID") === undefined) {
 		localStorage.setItem("warblerBrowserID", Math.random().toString());
 	}
+	leaflet.showMap();
 };
 
 var socket = io();
@@ -34,20 +35,18 @@ socket.on('warble', function(data){
 
 function Warble(content) {
 	this.content = content;
-	this.latitude = 0; //set to 0 because jslinter complain 
-	this.longitude = 0; //set to 0 because jslinter complain 
 	this.timestamp = Date.now();
 	this.user = localStorage.getItem("warblerBrowserID");
 	this.deleted = false;
-	this.latitude = 51.5295407;
-	this.longitude = -0.0422945;
+	this.latitude = leaflet.latitude;
+	this.longitude = leaflet.longitude;
 }
 
 function addWarble(data) {
 	var unWarble = data.user === localStorage.getItem("warblerBrowserID") ? "<input type='button' class='unwarble' value='UnWarble'>" : "";
-	return "<li class='warble'>" + data.latitude + data.longitude + data.content + 
+	return "<li class='warble'>" + data.content + 
 	"<br/><span class='date' id='" + data.timestamp + "'>Warbled at " + 
-	new Date(data.timestamp).toString().slice(0, 24) + 
+	new Date(data.timestamp).toString().slice(0, 24) + " Located at: " + data.latitude + ", " + data.longitude +
 	"</span>" + unWarble + "</li>";
 }
 
