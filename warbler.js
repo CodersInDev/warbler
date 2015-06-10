@@ -10,7 +10,7 @@ function warbler(){
   };
 
   app.handle = function(request, response){
-    var fct = handlerGet[request.url];
+    var fct = handlerGet[request.url] || handlerPost[request.url];
     if(!fct){
       fs.readFile(__dirname + request.url, function(err, data){
         if(err){
@@ -33,6 +33,10 @@ function warbler(){
 
   app.get = function (path, fct){
     handlerGet[path] = fct;
+  };
+
+  app.post = function (path, fct){
+    handlerPost[path] = fct;
   };
 
   return app;

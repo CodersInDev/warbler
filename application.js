@@ -1,12 +1,9 @@
-var warbler = require('./warbler.js'),
-    application = warbler(),
+var application = require('./warbler.js')(),
     databaseConfig = require('./config.js'),
-    db = require('level')(config.database),
+    db = require('level')(databaseConfig.database, {'valueEncoding': 'json'}),
     fs = require('fs');
 
 application.get("/home", function (req, res) {
-    //need to write the code 202, everything is ok
-    console.log(res.statusCode);
     res.write("<h1>Hello world!</h1>");
     res.write("<h1>How are you?</h1>");
     res.end();
@@ -25,28 +22,34 @@ application.get("/", function (req, res) {
 });
 
 application.post('/warble', function (req, res){
-  //need to parse the warble to delete <
   var warbleString = '';
-  request.on('data', function(chunk){
+  req.on('data', function(chunk){
     warbleString += chunk;
   });
 
-  request.on('end', function(){
+  req.on('end', function(){
     var warble = JSON.parse(warbleString);
     db.put(warble.timestamp, warble, function(err){
       if(err){
         console.log('Impossible to store the warble into the database');
       }else{
-        res.end("Wrable created!");
+        res.end(warbleString);
       }
     });
   });
 });
-// application.get('/warbles', function (req, res)){
-//   //read from the database
-//   res.write("database");
-// }
 
-
+application.get('/warbles', function (req, res){
+  var warbles = {warbles: []};
+  db.createValueStream({"reverse" : true})
+  .on('data', function (data) {
+    warbles.warbles.push(data);
+  })
+  .on("end", function(){
+    // response.write(arr.toString());
+    response.write(JSON.stringify(arr));
+    response.end();
+  });
+});
 
 module.exports = application;
