@@ -12,11 +12,13 @@ function Warble(content) {
 	this.content = content;
 	this.timestamp = new Date().getTime();
 	this.user = localStorage.getItem("browserID");
+	this.latitude = 0; //set to 0 because jslinter complain 
+	this.longitude = 0; //set to 0 because jslinter complain 
 	this.deleted = false;
 }
 
 function addWarble(data) {
-	return "<li class='warble'>" + data.content + "<br/>" + "<span id='date'>" + "Warbled at " + new Date(data.timestamp).toString().slice(0, 24) + "</span>" + "</li>";
+	return "<li class='warble'>" + data.latitude + data.longitude + data.content + "<br/>" + "<span id='date'>" + "Warbled at " + new Date(data.timestamp).toString().slice(0, 24) + "</span>" + "</li>";
 	//todo add delete button once its ready
 }
 
@@ -37,7 +39,16 @@ window.onload = function(){
 
 $("#warbleSubmit").click(function () {
 	var warble = new Warble( $("#warbleBox").val());
-	console.log(warble);
+	
+	navigator.geolocation.getCurrentPosition(function(position){
+
+		warble.latitude = position.coords.latitude;
+		warble.longitude = position.coords.longitude;
+		console.log(warble.latitude);
+		console.log(warble.longitude);
+		// console.log(warble);
+	});
+
 	if ($("#warbleBox").val().length !== 0 ){
 		$.post("/create",JSON.stringify(warble));
 		$("#warbleBox").val('');
