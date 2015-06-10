@@ -83,9 +83,13 @@ li {
     font-family: 'Raleway', sans-serif; */
 }
 
-#date {
+.date {
     color: rgb(181, 163, 163);
     font-size: 10px;
+}
+
+.unwarble {
+    float: right;
 }
 
 /***********end of warbles list******************/
@@ -124,3 +128,7 @@ li {
     background-color: rgb(143, 182, 224);
     
 }
+
+
+/************ Map **************/
+#map { height: 180px; }

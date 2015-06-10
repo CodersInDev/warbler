@@ -8,16 +8,17 @@ window.onload = function(){
 
 var socket = io();
 
+
 $('#warbleForm').submit(function(e){
 	e.preventDefault();
 	var warble = new Warble($("#warbleBox").val());
-	navigator.geolocation.getCurrentPosition(function(position){
-		warble.latitude = position.coords.latitude;
-		warble.longitude = position.coords.longitude;
-	});
+	// navigator.geolocation.getCurrentPosition(function(position){
+	// 	warble.latitude = position.coords.latitude;
+	// 	warble.longitude = position.coords.longitude;
+	// });
 	var warbleString = JSON.stringify(warble);
 	socket.emit('warble', warbleString);
-
+	leaflet.createMarker(warble);
 	if ($("#warbleBox").val().length){
 		$.post("/create", warbleString);
 		$("#warbleBox").val('');
@@ -44,6 +45,7 @@ function Warble(content) {
 
 function addWarble(data) {
 	var unWarble = data.user === localStorage.getItem("warblerBrowserID") ? "<input type='button' class='unwarble' value='UnWarble'>" : "";
+
 	return "<li class='warble'>" + data.content +
 	"<br/><span class='date' id='" + data.timestamp + "'>Warbled at " +
 	new Date(data.timestamp).toString().slice(0, 24) + " Located at: " + data.latitude + ", " + data.longitude +
@@ -56,8 +58,9 @@ function handlerGet () {
 		var worldWarblesDOM = "";
 		var userWarblesDOM = "";
 
+
 		for (var i = 0; i < warbles.length; i++) {
-			worldWarblesDOM += addWarble(warbles[i]);
+			worldWarblesDOM += addWarble(JSON.parse(warbles[i]));
 			if (warbles[i].user === localStorage.getItem("warblerBrowserID")) {
 				userWarblesDOM += addWarble(warbles[i]);
 			}
@@ -67,6 +70,7 @@ function handlerGet () {
 		$("#userStream").prepend(userWarblesDOM);
 	});
 }
+
 
 $("#userWarbles").click(function() {
     $("#userStream").toggle();
