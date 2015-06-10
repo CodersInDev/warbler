@@ -16,6 +16,13 @@ $('#warbleForm').submit(function(e){
 	// 	warble.longitude = position.coords.longitude;
 	// });
 	var warbleString = JSON.stringify(warble);
+	//check for js injection
+	if(warbleString.indexOf("<") > -1) {
+		warbleString = warbleString.replace("<", "&lt");
+	}
+	if(warbleString.indexOf(">") > -1) {
+		warbleString = warbleString.replace(">", "&gt");
+	}
 	socket.emit('warble', warbleString);
 	leaflet.createMarker(warble);
 	if ($("#warbleBox").val().length){

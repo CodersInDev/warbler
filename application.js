@@ -28,7 +28,21 @@ application.post('/warble', function (req, res){
   });
 
   req.on('end', function(){
-    var warble = JSON.parse(warbleString);
+    var warble;
+    if(warbleString.indexOf("<") > -1) {
+      warbleString = warbleString.replace("<", "&lt");
+    }
+    if(warbleString.indexOf(">") > -1) {
+      warbleString = warbleString.replace(">", "&gt");
+    }
+    try{
+      console.log(warbleString);
+      warble = JSON.parse(warbleString);
+    }catch(err){
+      console.log(err);
+    }
+    //if warble valid?
+    if(warble){
     db.put(warble.timestamp, warble, function(err){
       if(err){
         console.log('Impossible to store the warble into the database');
@@ -36,6 +50,7 @@ application.post('/warble', function (req, res){
         res.end(warbleString);
       }
     });
+  }//end if
   });
 });
 
