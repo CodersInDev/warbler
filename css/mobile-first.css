@@ -124,3 +124,7 @@ li {
     background-color: rgb(143, 182, 224);
     
 }
+
+
+/************ Map **************/
+#map { height: 180px; }

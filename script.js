@@ -13,6 +13,8 @@ function Warble(content) {
 	this.timestamp = new Date().getTime();
 	this.user = localStorage.getItem("browserID");
 	this.deleted = false;
+	this.latitude = 51.5295407;
+	this.longitude = -0.0422945;
 }
 
 function addWarble(data) {
@@ -38,10 +40,16 @@ window.onload = function(){
 $("#warbleSubmit").click(function () {
 	var warble = new Warble( $("#warbleBox").val());
 	console.log(warble);
+	var warbleMessage = {};
+	// warbleMessage.content = warble;
+	// warbleMessage.latitude = 51.5295407;
+	// warbleMessage.longitude = -0.0422945;
+	// console.log("new Warble: ", warbleMessage);
 	if ($("#warbleBox").val().length !== 0 ){
 		$.post("/create",JSON.stringify(warble));
 		$("#warbleBox").val('');
 	}
+	
 });
 
 
@@ -68,3 +76,5 @@ $("#userWarbles").click(function() {
     }
 });
 
+
+// addWarble({\"content\":\"hi\",\"timestamp\":1433935871999,\"user\":null,\"deleted\":false,\"latitude\":51.5295407,\"longitude\":-0.0422945});
