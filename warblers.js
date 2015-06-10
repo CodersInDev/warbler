@@ -1,8 +1,10 @@
 var listWarbles = [];
 var warblers = {};
 var fs = require('fs');
-var redis = require('redis');
-var client = redis.createClient();
+// var redis = require('redis');
+// var client = redis.createClient();
+
+var db = require("level")("./warbleDB");
 
 warblers["GET /"] = function (request, response) {
 	fs.readFile(__dirname + "/index.html", function (err, data){
@@ -12,45 +14,30 @@ warblers["GET /"] = function (request, response) {
 };
 
 warblers["GET /warbles"] = function (request, response) {
-	client.zrange('warbles', 0, -1, function(err, res){
-		  var resultat = res.reverse();
-		  response.write('[' + res.toString() + ']');
-			response.end();
-	});
+	// client.zrange('warbles', 0, -1, function(err, res){
+		  // var resultat = res.reverse();
+		  var arr = [];
+		db.createValueStream()
+  		.on('data', function (data) {
+		    arr.push(data);
+		})
+		.on("end", function(){
+		// response.write(arr.toString());
+			response.write(JSON.stringify(arr));
+			response.end();			
+		});
 };
-
-warblers["POST /warbles"] = function (request, response) {
-	//get the newest wrables
-	var result = [];
-	var timestamp = '';
-	request.on('data', function(chunkTimestamp){
-		timestamp += chunkTimestamp.toString();
-		fs.readFile('data.json', function (err, data){
-			for(var i =0; i < data.length; i++){
-				if(data[i].timestamp.toString() !== timestamp){
-					result.unshift(data[i]);
-					break;
-				}
-		  }
-	});
-		response.write(JSON.stringify(result));
-		response.end();
-	});
-};
-
 
 warblers["POST /create"] = function (request, response) {
 	//create a warbles and save it in a file
 	var warbleString = '';
-	var wrablersData;
-	var newWarble;
 	request.on('data', function(chunk){
-		warbleString += chunk.toString();
+		warbleString += chunk;
 	});
 
-request.on('end', function(){
+	request.on('end', function(){
 		var obj = JSON.parse(warbleString);
-			client.zadd('warbles', obj.timestamp , warbleString ,function(err, res){
+			db.put(obj.timestamp , warbleString ,function(err){
 				if(err){console.log(err);}
 				console.log("key saved");
 			});
