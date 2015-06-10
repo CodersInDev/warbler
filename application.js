@@ -47,8 +47,8 @@ application.get('/warbles', function (req, res){
   })
   .on("end", function(){
     // response.write(arr.toString());
-    response.write(JSON.stringify(arr));
-    response.end();
+    res.write(JSON.stringify(warbles));
+    res.end();
   });
 });
 

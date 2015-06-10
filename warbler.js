@@ -18,7 +18,7 @@ function warbler(){
           return;
         }else{
         //get the extension
-        console.log("read the file");
+        console.log("read the file: " + request.url);
         var ext = request.url.split('.')[1];
         response.writeHead(200, {'Content-Type' : 'text/' + ext});
         response.write(data);

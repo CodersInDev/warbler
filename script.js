@@ -8,7 +8,6 @@ window.onload = function(){
 
 var socket = io();
 
-
 $('#warbleForm').submit(function(e){
 	e.preventDefault();
 	var warble = new Warble($("#warbleBox").val());
@@ -20,7 +19,7 @@ $('#warbleForm').submit(function(e){
 	socket.emit('warble', warbleString);
 	leaflet.createMarker(warble);
 	if ($("#warbleBox").val().length){
-		$.post("/create", warbleString);
+		$.post("/warble", warbleString);
 		$("#warbleBox").val('');
 	}
 	return false;
@@ -58,11 +57,11 @@ function handlerGet () {
 		var worldWarblesDOM = "";
 		var userWarblesDOM = "";
 
-
-		for (var i = 0; i < warbles.length; i++) {
-			worldWarblesDOM += addWarble(JSON.parse(warbles[i]));
-			if (warbles[i].user === localStorage.getItem("warblerBrowserID")) {
-				userWarblesDOM += addWarble(warbles[i]);
+    console.log(warbles.warbles.length);
+		for (var i = 0; i < warbles.warbles.length; i++) {
+			worldWarblesDOM += addWarble(warbles.warbles[i]);
+			if (warbles.warbles[i].user === localStorage.getItem("warblerBrowserID")) {
+				userWarblesDOM += addWarble(warbles.warbles[i]);
 			}
 		}
 
