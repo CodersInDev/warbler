@@ -58,7 +58,7 @@ function handlerGet () {
 		var userWarblesDOM = "";
 		
 		for (var i = 0; i < warbles.length; i++) {
-			worldWarblesDOM += addWarble(warbles[i]);
+			worldWarblesDOM += addWarble(JSON.parse(warbles[i]));
 			if (warbles[i].user === localStorage.getItem("warblerBrowserID")) {
 				userWarblesDOM += addWarble(warbles[i]);
 			}
