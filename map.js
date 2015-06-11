@@ -5,6 +5,16 @@ var leaflet = {
 	latitude: '',
 	longitude: '',
 
+	// init: function(callback) {
+	// 	if (navigator.geolocation) {
+	// 		console.log("Geolocation allowed");
+	// 		var location = navigator.geolocation.getCurrentPosition(leaflet.showMap);
+	// 	}
+	// 	else {
+	// 		console.log("Geolocation not permitted");
+	// 	}
+	// 	callback();
+	// },
 
 	showMap: function() {
 		navigator.geolocation.getCurrentPosition(function(response){
@@ -21,13 +31,21 @@ var leaflet = {
 				accessToken: 'pk.eyJ1Ijoibm9mb290bm90ZXMiLCJhIjoiODg2Mzg4MTZjZjQxMDUyNDA3NWRmOTFmNTAzNjg5OWMifQ.yMaarDENqB-qe1srLI3u9g'
 			}).addTo(leaflet.map);
 
-		marker.bindPopup("<b>You are here</b>").openPopup();
+			marker.bindPopup("<b>You are here</b>").openPopup();
 
 		});
 	},
 
 	createMarker: function(warble) {
-		var marker = L.marker([warble.latitude, warble.longitude]).addTo(leaflet.map);
-		marker.bindPopup(warble.content).openPopup();
+		navigator.geolocation.getCurrentPosition(function(response){
+			warble.latitude = response.coords.latitude;
+			warble.longitude = response.coords.longitude;
+			console.log("latitude: ", warble.latitude);
+			console.log("longitude: ", warble.longitude);
+			// leaflet.map = L.map('map').setView([leaflet.latitude, leaflet.longitude], 15);
+			var marker = L.marker([warble.latitude, warble.longitude]).addTo(leaflet.map);
+			marker.bindPopup(warble.content).openPopup();
+		});
 	}
 };
+
