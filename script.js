@@ -53,7 +53,7 @@ function fetchJSONFile(path, callback) {
     fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat +'&lon=' + long+ '&zoom=18&addressdetails=1', function(data) {
        console.log(data);
         var location = data.address.city;
-        // console.log(location);
+        console.log(location);
         // document.getElementById("output").innerHTML = data;
         // do something with your data
     });
@@ -61,10 +61,19 @@ function fetchJSONFile(path, callback) {
 
 socket.on('warble', function(data){
 	var warble = JSON.parse(data);
-	$("#publicStream").prepend(addWarble(warble));
-	if (warble.user === localStorage.getItem("warblerBrowserID")) {
+	fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + warble.latitude +'&lon=' + warble.longitude + '&zoom=18&addressdetails=1', function(data) {
+       console.log(data);
+        var location = data.address.suburb;
+        console.log(location);
+        // document.getElementById("output").innerHTML = data;
+        // do something with your data
+        warble.locationFormat = location;
+        $("#publicStream").prepend(addWarble(warble));
+		if (warble.user === localStorage.getItem("warblerBrowserID")) {
 		$("#userStream").prepend(addWarble(warble));
 	}
+    });
+	
 });
 
 function Warble(content) {
@@ -74,13 +83,14 @@ function Warble(content) {
 	this.deleted = false;
 	this.latitude = leaflet.latitude;
 	this.longitude = leaflet.longitude;
+	this.locationFormat = '';
 }
 
 function addWarble(data) {
 	var unWarble = data.user === localStorage.getItem("warblerBrowserID") ? "<input type='button' class='unwarble' value='UnWarble'>" : "";
 	return "<li class='warble'>" + data.content + 
 	"<br/><span class='date' id='" + data.timestamp + "'>Warbled at " + 
-	new Date(data.timestamp).toString().slice(0, 24) + " Located at: " + data.latitude + ", " + data.longitude + 
+	new Date(data.timestamp).toString().slice(0, 24) + " Located at: " + data.locationFormat +
 	"</span>" + unWarble + "</li>";
 }
 
