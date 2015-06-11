@@ -47,8 +47,10 @@ socket.on('warbleFromServer', function(data){
 
 	var warble = JSON.parse(data);
 	fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + warble.latitude +'&lon=' + warble.longitude + '&zoom=18&addressdetails=1', function(data) {
-        var location = data.address.suburb;
-        warble.locationFormat = location;
+        var suburb = data.address.suburb;
+        var city = data.address.city;
+        warble.locationFormatSuburb = suburb;
+        warble.locationFormatCity = city;
         $("#publicStream").prepend(addWarble(warble));
 		if (warble.user === localStorage.getItem("warblerBrowserID")) {
 			$("#userStream").prepend(addWarble(warble));
@@ -64,14 +66,15 @@ function Warble(content) {
 	this.deleted = false;
 	this.latitude = leaflet.latitude;
 	this.longitude = leaflet.longitude;
-	this.locationFormat = "";
+	this.locationFormatSuburb = "";
+	this.locationFormatCity = "";
 }
 
 function addWarble(data) {
 	var unWarble = data.user === localStorage.getItem("warblerBrowserID") ? "<input type='button' class='unwarble' value='UnWarble'>" : "";
 	return "<li class='warble'>" + data.content + 
 	"<br/><span class='date' id='" + data.timestamp + "'>Warbled at " + 
-	new Date(data.timestamp).toString().slice(0, 24) + " Located at: " + data.locationFormat +
+	new Date(data.timestamp).toString().slice(0, 24) + " Located at: " + data.locationFormatSuburb + ", " + data.locationFormatCity + 
 	"</span>" + unWarble + "</li>";
 }
 
