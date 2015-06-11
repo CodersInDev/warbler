@@ -9,7 +9,7 @@ window.onload = function(){
 var socket = io();
 
 $('#warbleForm').submit(function(e){
-	e.preventDefault();	
+	e.preventDefault();
 	if ($("#warbleBox").val().length){
 			var warble = new Warble($("#warbleBox").val());
 			// navigator.geolocation.getCurrentPosition(function(position){
@@ -21,7 +21,7 @@ $('#warbleForm').submit(function(e){
 			socket.emit('warble', warbleString);
 
 			leaflet.createMarker(warble);
-			
+
 			$.post("/warble", warbleString);
 			$("#warbleBox").val('');
 	}
@@ -46,7 +46,7 @@ function fetchJSONFile(path, callback) {
 socket.on('warbleFromServer', function(data){
 
 	var warble = JSON.parse(data);
-	fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + warble.latitude +'&lon=' + warble.longitude + '&zoom=18&addressdetails=1', function(data) {
+	fetchJSONFile('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + warble.latitude +'&lon=' + warble.longitude + '&zoom=18&addressdetails=1', function(data) {
 		if (data.address) {
 			var suburb = data.address.suburb;
 			var city = data.address.city;
@@ -78,11 +78,11 @@ function Warble(content) {
 
 function addWarble(data) {
 	var unWarble = data.user === localStorage.getItem("warblerBrowserID") ? "<input type='button' class='unwarble' value='UnWarble'>" : "";
-	
-	return "<li class='warble' id='" + data.timestamp + "'>" + data.content + 
-	"<br/><span class='date'>Warbled at " + 
-	new Date(data.timestamp).toString().slice(0, 24) + 
-	" Located at: " + data.locationFormatSuburb + ", " + data.locationFormatCity + 
+
+	return "<li class='warble' id='" + data.timestamp + "'>" + data.content +
+	"<br/><span class='date'>Warbled at " +
+	new Date(data.timestamp).toString().slice(0, 24) +
+	" Located at: " + data.locationFormatSuburb + ", " + data.locationFormatCity +
 	"</span>" + unWarble + "</li>";
 }
 
