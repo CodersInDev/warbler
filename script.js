@@ -1,6 +1,6 @@
 window.onload = function(){
 	handlerGet();
-	if(localStorage.getItem("warblerBrowserID") === undefined) {
+	if(typeof localStorage.getItem("warblerBrowserID") !== "string") {
 		localStorage.setItem("warblerBrowserID", Math.random().toString());
 	}
 	leaflet.showMap();
@@ -9,25 +9,21 @@ window.onload = function(){
 var socket = io();
 
 $('#warbleForm').submit(function(e){
-	e.preventDefault();
-	var warble = new Warble($("#warbleBox").val());
-	// navigator.geolocation.getCurrentPosition(function(position){
-	// 	warble.latitude = position.coords.latitude;
-	// 	warble.longitude = position.coords.longitude;
-	// });
-	var warbleString = JSON.stringify(warble);
-	//check for js injection
-	if(warbleString.indexOf("<") > -1) {
-		warbleString = warbleString.replace("<", "&lt");
-	}
-	if(warbleString.indexOf(">") > -1) {
-		warbleString = warbleString.replace(">", "&gt");
-	}
-	socket.emit('warble', warbleString);
-	leaflet.createMarker(warble);
+	e.preventDefault();	
 	if ($("#warbleBox").val().length){
-		$.post("/warble", warbleString);
-		$("#warbleBox").val('');
+			var warble = new Warble($("#warbleBox").val());
+			// navigator.geolocation.getCurrentPosition(function(position){
+			// 	warble.latitude = position.coords.latitude;
+			// 	warble.longitude = position.coords.longitude;
+			// });
+			var warbleString = JSON.stringify(warble).replace(/</g, "&lt").replace(/>/g, "&gt");
+
+			socket.emit('warble', warbleString);
+
+			leaflet.createMarker(warble);
+			
+			$.post("/warble", warbleString);
+			$("#warbleBox").val('');
 	}
 	return false;
 });
@@ -38,6 +34,10 @@ socket.on('warbleFromServer', function(data){
 	if (warble.user === localStorage.getItem("warblerBrowserID")) {
 		$("#userStream").prepend(addWarble(warble));
 	}
+});
+
+socket.on("deleteFromServer", function(stamp) {
+	$(stamp).remove();
 });
 
 function Warble(content) {
@@ -51,10 +51,10 @@ function Warble(content) {
 
 function addWarble(data) {
 	var unWarble = data.user === localStorage.getItem("warblerBrowserID") ? "<input type='button' class='unwarble' value='UnWarble'>" : "";
-
-	return "<li class='warble'>" + data.content +
-	"<br/><span class='date' id='" + data.timestamp + "'>Warbled at " +
-	new Date(data.timestamp).toString().slice(0, 24) + " Located at: " + data.latitude + ", " + data.longitude +
+	return "<li class='warble' id='" + data.timestamp + "'>" + data.content +
+	"<br/><span class='date'>Warbled at " +
+	new Date(data.timestamp).toString().slice(0, 24) + 
+	" Located at: " + data.latitude + ", " + data.longitude +
 	"</span>" + unWarble + "</li>";
 }
 
@@ -63,8 +63,6 @@ function handlerGet () {
 		var warbles = JSON.parse(data);
 		var worldWarblesDOM = "";
 		var userWarblesDOM = "";
-
-    console.log(warbles.warbles.length);
 		for (var i = 0; i < warbles.warbles.length; i++) {
 			worldWarblesDOM += addWarble(warbles.warbles[i]);
 			if (warbles.warbles[i].user === localStorage.getItem("warblerBrowserID")) {
@@ -76,6 +74,14 @@ function handlerGet () {
 		$("#userStream").prepend(userWarblesDOM);
 	});
 }
+
+//delete function for clicking on unwarble button
+$("body").on("click", "li input", function(){
+	var jId = "#" + $(this).parent().attr('id');
+	$(jId).remove();
+	socket.emit("delete", jId);
+	$.post("/delete", jId.substr(1));
+});
 
 
 $("#userWarbles").click(function() {

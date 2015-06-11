@@ -10,4 +10,7 @@ io.on('connection', function(socket){
   socket.on('warble', function(msg){
     io.emit('warbleFromServer', msg);
   });
+  socket.on("delete", function(stamp){
+  	io.emit("deleteFromServer", stamp);
+  });
 });

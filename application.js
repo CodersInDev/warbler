@@ -3,16 +3,6 @@ var application = require('./warbler.js')(),
     db = require('level')(databaseConfig.database, {'valueEncoding': 'json'}),
     fs = require('fs');
 
-application.get("/home", function (req, res) {
-    res.write("<h1>Hello world!</h1>");
-    res.write("<h1>How are you?</h1>");
-    res.end();
-});
-
-application.get("/anni", function (req, res) {
-  res.end("Hello Annit");
-});
-
 application.get("/", function (req, res) {
   fs.readFile(__dirname + '/index.html', function(err, data){
     if(err){
@@ -33,12 +23,7 @@ application.post('/warble', function (req, res){
 
   req.on('end', function(){
     var warble;
-    if(warbleString.indexOf("<") > -1) {
-      warbleString = warbleString.replace("<", "&lt");
-    }
-    if(warbleString.indexOf(">") > -1) {
-      warbleString = warbleString.replace(">", "&gt");
-    }
+    warbleString = warbleString.replace(/</g, "&lt").replace(/>/g, "&gt");
     try{
       warble = JSON.parse(warbleString);
     }catch(err){
@@ -56,6 +41,20 @@ application.post('/warble', function (req, res){
     });
   }//end if
   });
+});
+
+application.post('/delete', function (req, res){
+    var stamp = "";
+    req.on('data', function(data){
+        stamp += data;
+    });
+    req.on('end', function(){
+        db.del(stamp, function (err) {
+          if (err) {
+            console.log("error", err);
+          }
+        });
+    });
 });
 
 application.get('/warbles', function (req, res){
