@@ -46,39 +46,70 @@ function fetchJSONFile(path, callback) {
 socket.on('warbleFromServer', function(data){
 
 	var warble = JSON.parse(data);
-	fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + warble.latitude +'&lon=' + warble.longitude + '&zoom=18&addressdetails=1', function(data) {
-		if (data.address) {
-			var suburb = data.address.suburb;
-			var city = data.address.city;
-			warble.locationFormatSuburb = suburb;
-			warble.locationFormatCity = city;
-		}
+	// fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + warble.latitude +'&lon=' + warble.longitude + '&zoom=18&addressdetails=1', function(data) {
+	// 	if (data.address) {
+	// 		var suburb = data.address.suburb;
+	// 		var city = data.address.city;
+	// 		warble.locationFormatSuburb = suburb;
+	// 		warble.locationFormatCity = city;
+	// 	}
 		$("#publicStream").prepend(addWarble(warble));
 		if (warble.user === localStorage.getItem("warblerBrowserID")) {
 			$("#userStream").prepend(addWarble(warble));
 		}
-	});
+	// });
 	leaflet.createMarker(warble);
 });
 
 function Warble(content) {
+// IF geoloc is on
+//get geoloc from navigator
+//then get parsed location from nominatim
+	if(navigator.geolocation){
+		// this.latitude = navigator.geolocation.getCurrentPosition().coords.latitude;
+		// this.longitude = navigator.geolocation.getCurrentPosition().coords.longitude;
+		this.latitude = leaflet.latitude;
+		this.longitude = leaflet.longitude;
+		
+		fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + this.latitude +'&lon=' + this.longitude + '&zoom=18&addressdetails=1', function(response) {
+			var suburb = response.address.suburb;
+			var city = response.address.city;
+			this.locationFormatSuburb = suburb;
+			this.locationFormatCity = city;
+			console.log(this.locationFormatSuburb);
+		});
+		// console.log(this.locationFormatSuburb);
+	} 
+	else {
+		// this.latitude = leaflet.latitude;
+		// this.longitude = leaflet.longitude;
+		this.locationFormatSuburb = "";
+		this.locationFormatCity = "";
+	}
+
+
 	this.content = content;
 	this.timestamp = Date.now();
 	this.user = localStorage.getItem("warblerBrowserID");
 	this.deleted = false;
-	this.latitude = leaflet.latitude;
-	this.longitude = leaflet.longitude;
-	this.locationFormatSuburb = "";
-	this.locationFormatCity = "";
+
 }
 
 function addWarble(data) {
+	var locString = data.longitude ? " Located at: " + data.locationFormatSuburb + ", " + data.longitude : "";
 	var unWarble = data.user === localStorage.getItem("warblerBrowserID") ? "<input type='button' class='unwarble' value='UnWarble'>" : "";
-	return "<li class='warble'>" + data.content + 
-	"<br/><span class='date' id='" + data.timestamp + "'>Warbled at " + 
-	new Date(data.timestamp).toString().slice(0, 24) + " Located at: " + data.locationFormatSuburb + ", " + data.locationFormatCity + 
-	"</span>" + unWarble + "</li>";
+	return "<li class='warble' id='" + data.timestamp + "'>" + data.content + 
+	"<br/><span class='date'>Warbled at " + new Date(data.timestamp).toString().slice(0, 24) + 
+	locString + "</span>" + unWarble + "</li>";
 }
+
+// function addWarble(data) {
+// 	var unWarble = data.user === localStorage.getItem("warblerBrowserID") ? "<input type='button' class='unwarble' value='UnWarble'>" : "";
+// 	return "<li class='warble'>" + data.content + 
+// 	"<br/><span class='date' id='" + data.timestamp + "'>Warbled at " + 
+// 	new Date(data.timestamp).toString().slice(0, 24) + " Located at: " + data.locationFormatSuburb + ", " + data.locationFormatCity + 
+// 	"</span>" + unWarble + "</li>";
+// }
 
 function handlerGet () {
 	$.get("/warbles", function handler(data){
