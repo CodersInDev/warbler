@@ -8,7 +8,5 @@ function handler(request, response) {
 	}else{
 		warblers.generic(request, response);
 	}
-
 }
-
 module.exports = handler;

@@ -8,6 +8,6 @@ server.listen(process.env.PORT || 8000, function(){
 
 io.on('connection', function(socket){
   socket.on('warble', function(msg){
-    io.emit('warble', msg);
+    io.emit('warbleFromServer', msg);
   });
 });

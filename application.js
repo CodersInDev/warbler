@@ -9,6 +9,10 @@ application.get("/home", function (req, res) {
     res.end();
 });
 
+application.get("/anni", function (req, res) {
+  res.end("Hello Annit");
+});
+
 application.get("/", function (req, res) {
   fs.readFile(__dirname + '/index.html', function(err, data){
     if(err){
@@ -36,10 +40,10 @@ application.post('/warble', function (req, res){
       warbleString = warbleString.replace(">", "&gt");
     }
     try{
-      console.log(warbleString);
       warble = JSON.parse(warbleString);
     }catch(err){
       console.log(err);
+      res.end("wrong type of data! You must send some JSON!");
     }
     //if warble valid?
     if(warble){

@@ -10,7 +10,13 @@ function warbler(){
   };
 
   app.handle = function(request, response){
-    var fct = handlerGet[request.url] || handlerPost[request.url];
+    var fct;
+    if(request.method === 'GET'){
+      fct = handlerGet[request.url];
+    }
+    if(request.method === 'POST'){
+      fct = handlerPost[request.url];
+    }
     if(!fct){
       fs.readFile(__dirname + request.url, function(err, data){
         if(err){

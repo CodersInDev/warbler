@@ -32,7 +32,7 @@ $('#warbleForm').submit(function(e){
 	return false;
 });
 
-socket.on('warble', function(data){
+socket.on('warbleFromServer', function(data){
 	var warble = JSON.parse(data);
 	$("#publicStream").prepend(addWarble(warble));
 	if (warble.user === localStorage.getItem("warblerBrowserID")) {
