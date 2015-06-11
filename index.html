@@ -5,11 +5,9 @@
 	  <title>Warble on the world wide web</title>
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="css/mobile-first.css" media="screen, handheld" />
-    	<link rel="stylesheet" type="text/css" href="css/enhanced.css" media="screen  and (min-width: 48em)"/>
-    	<link href="https://fonts.googleapis.com/css?family=Raleway:400,300,700" rel="stylesheet" type="text/css">
-    	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
-	  <!-- <link rel='stylesheet' href='style.css'> -->
-
+    <link rel="stylesheet" type="text/css" href="css/enhanced.css" media="screen  and (min-width: 48em)"/>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
 	</head>
 
 	<body>
@@ -17,15 +15,11 @@
 			<div id="userWarbles"><p>Worldwide Warbles</p></div>
 			<div id="userProfile"><p>My profile</p></div>
 		</header>
-		
-		<div id="content">
-			<div id="userStream" style="display:none;">
 
-			</div>
+		<div id="content">
+			<div id="userStream" style="display:none;"></div>
 			<div id="map"></div>
 			<div id="publicStream"></div>
-		
-
 
 		<footer>
 			<div id="warbleWrap">
@@ -38,15 +32,10 @@
 			</div>
 		</footer>
 
-
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	  <script src="/socket.io/socket.io.js"></script>
+		<script src="map.js"></script>
+		<script src="script.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
 	</body>
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-
-    <script src="/socket.io/socket.io.js"></script>
-	<script src="map.js"></script>
-	<script src="script.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
-	
-
 </html>

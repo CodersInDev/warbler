@@ -16,17 +16,23 @@ $('#warbleForm').submit(function(e){
 	// 	warble.longitude = position.coords.longitude;
 	// });
 	var warbleString = JSON.stringify(warble);
+	//check for js injection
+	if(warbleString.indexOf("<") > -1) {
+		warbleString = warbleString.replace("<", "&lt");
+	}
+	if(warbleString.indexOf(">") > -1) {
+		warbleString = warbleString.replace(">", "&gt");
+	}
 	socket.emit('warble', warbleString);
 	leaflet.createMarker(warble);
-	
 	if ($("#warbleBox").val().length){
-		$.post("/create", warbleString);
+		$.post("/warble", warbleString);
 		$("#warbleBox").val('');
 	}
 	return false;
 });
 
-socket.on('warble', function(data){
+socket.on('warbleFromServer', function(data){
 	var warble = JSON.parse(data);
 	$("#publicStream").prepend(addWarble(warble));
 	if (warble.user === localStorage.getItem("warblerBrowserID")) {
@@ -45,8 +51,9 @@ function Warble(content) {
 
 function addWarble(data) {
 	var unWarble = data.user === localStorage.getItem("warblerBrowserID") ? "<input type='button' class='unwarble' value='UnWarble'>" : "";
-	return "<li class='warble'>" + data.content + 
-	"<br/><span class='date' id='" + data.timestamp + "'>Warbled at " + 
+
+	return "<li class='warble'>" + data.content +
+	"<br/><span class='date' id='" + data.timestamp + "'>Warbled at " +
 	new Date(data.timestamp).toString().slice(0, 24) + " Located at: " + data.latitude + ", " + data.longitude +
 	"</span>" + unWarble + "</li>";
 }
@@ -56,13 +63,14 @@ function handlerGet () {
 		var warbles = JSON.parse(data);
 		var worldWarblesDOM = "";
 		var userWarblesDOM = "";
-		
-		for (var i = 0; i < warbles.length; i++) {
-			worldWarblesDOM += addWarble(JSON.parse(warbles[i]));
-			if (warbles[i].user === localStorage.getItem("warblerBrowserID")) {
-				userWarblesDOM += addWarble(warbles[i]);
+
+    console.log(warbles.warbles.length);
+		for (var i = 0; i < warbles.warbles.length; i++) {
+			worldWarblesDOM += addWarble(warbles.warbles[i]);
+			if (warbles.warbles[i].user === localStorage.getItem("warblerBrowserID")) {
+				userWarblesDOM += addWarble(warbles.warbles[i]);
 			}
-		} 
+		}
 
 		$("#publicStream").prepend(worldWarblesDOM);
 		$("#userStream").prepend(userWarblesDOM);
@@ -83,6 +91,3 @@ $("#userWarbles").click(function() {
         $("#userStream").css("display","block");
     }
 });
-
-
-// addWarble({\"content\":\"hi\",\"timestamp\":1433935871999,\"user\":null,\"deleted\":false,\"latitude\":51.5295407,\"longitude\":-0.0422945});

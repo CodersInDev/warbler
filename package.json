@@ -14,8 +14,8 @@
     "shot": "^1.5.0"
   },
   "dependencies": {
-    "level": "^1.1.0",
-    "socket.io": "1.2.0"
+    "socket.io": "^1.3.5",
+    "level": "^1.1.0"
   },
   "scripts": {
     "test": "node ./test/test.js",
