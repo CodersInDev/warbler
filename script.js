@@ -23,11 +23,17 @@ $('#warbleForm').submit(function(e){
         // do something with your data
     });
 	var warbleString = JSON.stringify(warble);
+	//check for js injection
+	if(warbleString.indexOf("<") > -1) {
+		warbleString = warbleString.replace("<", "&lt");
+	}
+	if(warbleString.indexOf(">") > -1) {
+		warbleString = warbleString.replace(">", "&gt");
+	}
 	socket.emit('warble', warbleString);
 	leaflet.createMarker(warble);
-	
 	if ($("#warbleBox").val().length){
-		$.post("/create", warbleString);
+		$.post("/warble", warbleString);
 		$("#warbleBox").val('');
 	}
 	return false;
@@ -48,18 +54,19 @@ function fetchJSONFile(path, callback) {
     }
     // this requests the file and executes a callback with the parsed result once
     //   it is available
-    var long = 0.0423496;
-    var lat = 51.529527099999996;
-    fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat +'&lon=' + long+ '&zoom=18&addressdetails=1', function(data) {
-       console.log(data);
-        var location = data.address.city;
-        console.log(location);
-        // document.getElementById("output").innerHTML = data;
-        // do something with your data
-    });
+    // var long = 0.0423496;
+    // var lat = 51.529527099999996;
+    // fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat +'&lon=' + long+ '&zoom=18&addressdetails=1', function(data) {
+    //    console.log(data);
+    //     var location = data.address.city;
+    //     console.log(location);
+    //     // document.getElementById("output").innerHTML = data;
+    //     // do something with your data
+    // });
 
 
-socket.on('warble', function(data){
+socket.on('warbleFromServer', function(data){
+
 	var warble = JSON.parse(data);
 	fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + warble.latitude +'&lon=' + warble.longitude + '&zoom=18&addressdetails=1', function(data) {
        console.log(data);
@@ -99,13 +106,14 @@ function handlerGet () {
 		var warbles = JSON.parse(data);
 		var worldWarblesDOM = "";
 		var userWarblesDOM = "";
-		
-		for (var i = 0; i < warbles.length; i++) {
-			worldWarblesDOM += addWarble(JSON.parse(warbles[i]));
-			if (warbles[i].user === localStorage.getItem("warblerBrowserID")) {
-				userWarblesDOM += addWarble(warbles[i]);
+
+    console.log(warbles.warbles.length);
+		for (var i = 0; i < warbles.warbles.length; i++) {
+			worldWarblesDOM += addWarble(warbles.warbles[i]);
+			if (warbles.warbles[i].user === localStorage.getItem("warblerBrowserID")) {
+				userWarblesDOM += addWarble(warbles.warbles[i]);
 			}
-		} 
+		}
 
 		$("#publicStream").prepend(worldWarblesDOM);
 		$("#userStream").prepend(userWarblesDOM);
@@ -126,6 +134,3 @@ $("#userWarbles").click(function() {
         $("#userStream").css("display","block");
     }
 });
-
-
-// addWarble({\"content\":\"hi\",\"timestamp\":1433935871999,\"user\":null,\"deleted\":false,\"latitude\":51.5295407,\"longitude\":-0.0422945});
