@@ -11,17 +11,6 @@ var socket = io();
 $('#warbleForm').submit(function(e){
 	e.preventDefault();
 	var warble = new Warble($("#warbleBox").val());
-	// navigator.geolocation.getCurrentPosition(function(position){
-	// 	warble.latitude = position.coords.latitude;
-	// 	warble.longitude = position.coords.longitude;
-	// });
-	fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat +'&lon=' + long+ '&zoom=18&addressdetails=1', function(data) {
-       console.log(data);
-        var location = data.address.city;
-        console.log(location);
-        // document.getElementById("output").innerHTML = data;
-        // do something with your data
-    });
 	var warbleString = JSON.stringify(warble);
 	//check for js injection
 	if(warbleString.indexOf("<") > -1) {
@@ -49,36 +38,21 @@ function fetchJSONFile(path, callback) {
                 }
             }
         };
+
         httpRequest.open('GET', path);
         httpRequest.send();
-    }
-    // this requests the file and executes a callback with the parsed result once
-    //   it is available
-    // var long = 0.0423496;
-    // var lat = 51.529527099999996;
-    // fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat +'&lon=' + long+ '&zoom=18&addressdetails=1', function(data) {
-    //    console.log(data);
-    //     var location = data.address.city;
-    //     console.log(location);
-    //     // document.getElementById("output").innerHTML = data;
-    //     // do something with your data
-    // });
-
+}
 
 socket.on('warbleFromServer', function(data){
 
 	var warble = JSON.parse(data);
 	fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + warble.latitude +'&lon=' + warble.longitude + '&zoom=18&addressdetails=1', function(data) {
-       console.log(data);
         var location = data.address.suburb;
-        console.log(location);
-        // document.getElementById("output").innerHTML = data;
-        // do something with your data
         warble.locationFormat = location;
         $("#publicStream").prepend(addWarble(warble));
 		if (warble.user === localStorage.getItem("warblerBrowserID")) {
-		$("#userStream").prepend(addWarble(warble));
-	}
+			$("#userStream").prepend(addWarble(warble));
+		}
     });
 	
 });
@@ -90,7 +64,7 @@ function Warble(content) {
 	this.deleted = false;
 	this.latitude = leaflet.latitude;
 	this.longitude = leaflet.longitude;
-	this.locationFormat = '';
+	this.locationFormat = "";
 }
 
 function addWarble(data) {
