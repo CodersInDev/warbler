@@ -28,12 +28,37 @@ $('#warbleForm').submit(function(e){
 	return false;
 });
 
+function fetchJSONFile(path, callback) {
+		var httpRequest = new XMLHttpRequest();
+		httpRequest.onreadystatechange = function() {
+			if (httpRequest.readyState === 4) {
+				if (httpRequest.status === 200) {
+					var data = JSON.parse(httpRequest.responseText);
+					if (callback) {callback(data);}
+				}
+			}
+		};
+
+		httpRequest.open('GET', path);
+		httpRequest.send();
+}
+
 socket.on('warbleFromServer', function(data){
+
 	var warble = JSON.parse(data);
-	$("#publicStream").prepend(addWarble(warble));
-	if (warble.user === localStorage.getItem("warblerBrowserID")) {
-		$("#userStream").prepend(addWarble(warble));
-	}
+	fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + warble.latitude +'&lon=' + warble.longitude + '&zoom=18&addressdetails=1', function(data) {
+		if (data.address) {
+			var suburb = data.address.suburb;
+			var city = data.address.city;
+			warble.locationFormatSuburb = suburb;
+			warble.locationFormatCity = city;
+		}
+		$("#publicStream").prepend(addWarble(warble));
+		if (warble.user === localStorage.getItem("warblerBrowserID")) {
+			$("#userStream").prepend(addWarble(warble));
+		}
+	});
+	leaflet.createMarker(warble);
 });
 
 socket.on("deleteFromServer", function(stamp) {
@@ -47,14 +72,17 @@ function Warble(content) {
 	this.deleted = false;
 	this.latitude = leaflet.latitude;
 	this.longitude = leaflet.longitude;
+	this.locationFormatSuburb = "";
+	this.locationFormatCity = "";
 }
 
 function addWarble(data) {
 	var unWarble = data.user === localStorage.getItem("warblerBrowserID") ? "<input type='button' class='unwarble' value='UnWarble'>" : "";
-	return "<li class='warble' id='" + data.timestamp + "'>" + data.content +
-	"<br/><span class='date'>Warbled at " +
+	
+	return "<li class='warble' id='" + data.timestamp + "'>" + data.content + 
+	"<br/><span class='date'>Warbled at " + 
 	new Date(data.timestamp).toString().slice(0, 24) + 
-	" Located at: " + data.latitude + ", " + data.longitude +
+	" Located at: " + data.locationFormatSuburb + ", " + data.locationFormatCity + 
 	"</span>" + unWarble + "</li>";
 }
 
@@ -63,6 +91,7 @@ function handlerGet () {
 		var warbles = JSON.parse(data);
 		var worldWarblesDOM = "";
 		var userWarblesDOM = "";
+
 		for (var i = 0; i < warbles.warbles.length; i++) {
 			worldWarblesDOM += addWarble(warbles.warbles[i]);
 			if (warbles.warbles[i].user === localStorage.getItem("warblerBrowserID")) {
@@ -85,15 +114,15 @@ $("body").on("click", "li input", function(){
 
 
 $("#userWarbles").click(function() {
-    $("#userStream").toggle();
-    if ($("#userWarbles").text() === "Your Warbles") {
-        $("#userWarbles").text("Worldwide Warbles");
-        $("#publicStream").css("display","block");
-        $("#userStream").css("display","none");
-    }
-    else {
-        $("#userWarbles").text("Your Warbles");
-        $("#publicStream").css("display","none");
-        $("#userStream").css("display","block");
-    }
+	$("#userStream").toggle();
+	if ($("#userWarbles").text() === "Your Warbles") {
+		$("#userWarbles").text("Worldwide Warbles");
+		$("#publicStream").css("display","block");
+		$("#userStream").css("display","none");
+	}
+	else {
+		$("#userWarbles").text("Your Warbles");
+		$("#publicStream").css("display","none");
+		$("#userStream").css("display","block");
+	}
 });
