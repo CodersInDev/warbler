@@ -29,34 +29,36 @@ $('#warbleForm').submit(function(e){
 });
 
 function fetchJSONFile(path, callback) {
-        var httpRequest = new XMLHttpRequest();
-        httpRequest.onreadystatechange = function() {
-            if (httpRequest.readyState === 4) {
-                if (httpRequest.status === 200) {
-                    var data = JSON.parse(httpRequest.responseText);
-                    if (callback) {callback(data);}
-                }
-            }
-        };
+		var httpRequest = new XMLHttpRequest();
+		httpRequest.onreadystatechange = function() {
+			if (httpRequest.readyState === 4) {
+				if (httpRequest.status === 200) {
+					var data = JSON.parse(httpRequest.responseText);
+					if (callback) {callback(data);}
+				}
+			}
+		};
 
-        httpRequest.open('GET', path);
-        httpRequest.send();
+		httpRequest.open('GET', path);
+		httpRequest.send();
 }
 
 socket.on('warbleFromServer', function(data){
 
 	var warble = JSON.parse(data);
 	fetchJSONFile('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + warble.latitude +'&lon=' + warble.longitude + '&zoom=18&addressdetails=1', function(data) {
-        var suburb = data.address.suburb;
-        var city = data.address.city;
-        warble.locationFormatSuburb = suburb;
-        warble.locationFormatCity = city;
-        $("#publicStream").prepend(addWarble(warble));
+		if (data.address) {
+			var suburb = data.address.suburb;
+			var city = data.address.city;
+			warble.locationFormatSuburb = suburb;
+			warble.locationFormatCity = city;
+		}
+		$("#publicStream").prepend(addWarble(warble));
 		if (warble.user === localStorage.getItem("warblerBrowserID")) {
 			$("#userStream").prepend(addWarble(warble));
 		}
-    });
-	
+	});
+	leaflet.createMarker(warble);
 });
 
 function Warble(content) {
@@ -84,7 +86,7 @@ function handlerGet () {
 		var worldWarblesDOM = "";
 		var userWarblesDOM = "";
 
-    console.log(warbles.warbles.length);
+	console.log(warbles.warbles.length);
 		for (var i = 0; i < warbles.warbles.length; i++) {
 			worldWarblesDOM += addWarble(warbles.warbles[i]);
 			if (warbles.warbles[i].user === localStorage.getItem("warblerBrowserID")) {
@@ -99,15 +101,15 @@ function handlerGet () {
 
 
 $("#userWarbles").click(function() {
-    $("#userStream").toggle();
-    if ($("#userWarbles").text() === "Your Warbles") {
-        $("#userWarbles").text("Worldwide Warbles");
-        $("#publicStream").css("display","block");
-        $("#userStream").css("display","none");
-    }
-    else {
-        $("#userWarbles").text("Your Warbles");
-        $("#publicStream").css("display","none");
-        $("#userStream").css("display","block");
-    }
+	$("#userStream").toggle();
+	if ($("#userWarbles").text() === "Your Warbles") {
+		$("#userWarbles").text("Worldwide Warbles");
+		$("#publicStream").css("display","block");
+		$("#userStream").css("display","none");
+	}
+	else {
+		$("#userWarbles").text("Your Warbles");
+		$("#publicStream").css("display","none");
+		$("#userStream").css("display","block");
+	}
 });
