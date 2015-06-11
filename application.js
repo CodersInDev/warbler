@@ -3,16 +3,6 @@ var application = require('./warbler.js')(),
     db = require('level')(databaseConfig.database, {'valueEncoding': 'json'}),
     fs = require('fs');
 
-application.get("/home", function (req, res) {
-    res.write("<h1>Hello world!</h1>");
-    res.write("<h1>How are you?</h1>");
-    res.end();
-});
-
-application.get("/anni", function (req, res) {
-  res.end("Hello Annit");
-});
-
 application.get("/", function (req, res) {
   fs.readFile(__dirname + '/index.html', function(err, data){
     if(err){
@@ -44,17 +34,20 @@ application.post('/warble', function (req, res){
     }catch(err){
       console.log(err);
       res.end("wrong type of data! You must send some JSON!");
+      return;
     }
     //if warble valid?
-    if(warble){
-    db.put(warble.timestamp, warble, function(err){
-      if(err){
-        console.log('Impossible to store the warble into the database');
-      }else{
-        res.end(warbleString);
-      }
-    });
-  }//end if
+    if(validate(warble, databaseConfig.validator)){
+      db.put(warble.timestamp, warble, function(err){
+        if(err){
+          console.log('Impossible to store the warble into the database');
+        }else{
+          res.end(warbleString);
+        }
+      });
+    }else{
+      res.end("The data received are not valid");
+    }
   });
 });
 
@@ -70,5 +63,26 @@ application.get('/warbles', function (req, res){
     res.end();
   });
 });
+
+//Helpers
+function validate(query, validator){
+  var result = true;
+  //check that the values required exist in query
+  for(var prop in validator){
+    if(validator[prop].required){
+      if(!query.hasOwnProperty(prop)){
+        result = false;
+      }
+    }else{
+      //check the type of the property
+      if(typeof query[prop] !== validator[prop].type){
+        result = false;
+      }
+    }
+  }
+  return result;
+}
+
+
 
 module.exports = application;
