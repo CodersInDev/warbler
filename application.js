@@ -29,17 +29,21 @@ application.post('/warble', function (req, res){
     }catch(err){
       console.log(err);
       res.end("wrong type of data! You must send some JSON!");
+      return -1;
     }
     //if warble valid?
-    if(warble){
-    db.put(warble.timestamp, warble, function(err){
-      if(err){
-        console.log('Impossible to store the warble into the database');
-      }else{
-        res.end(warbleString);
-      }
-    });
-  }//end if
+    if(validateQuery(warble, databaseConfig.validator)){
+      db.put(warble.timestamp, warble, function(err){
+        if(err){
+          console.log('Impossible to store the warble into the database');
+        }else{
+          res.end(warbleString);
+          return -1;
+        }
+      });
+    }else{
+      res.end('Les donnees ne sont pas conformes!');
+    }
   });
 });
 
@@ -69,5 +73,22 @@ application.get('/warbles', function (req, res){
     res.end();
   });
 });
+
+//helper functions
+function validateQuery(query, validator){
+    var result = true;
+    for(var prop in validator){
+      if(validator[prop].required){
+        if(!query.hasOwnProperty(prop)){
+          result = false;
+        }
+      }else{
+        if(typeof query[prop] !== validator[prop].type){
+          result = false;
+        }
+      }
+    }
+    return result;
+  }
 
 module.exports = application;
