@@ -4,15 +4,9 @@ var application = require('./warbler.js')(),
     fs = require('fs');
 
 application.get("/", function (req, res) {
-  fs.readFile(__dirname + '/index.html', function(err, data){
-    if(err){
-      res.end("Could not read the index file");
-      return;
-    }else{
-      res.write(data);
-      res.end();
-   }
-  });
+  var data = application.loadFile(__dirname + '/index.html');
+  res.write(data);
+  res.end();
 });
 
 application.post('/warble', function (req, res){
