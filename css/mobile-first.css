@@ -39,7 +39,7 @@ header {
 #content {
     width: 100%;
     margin: 60px auto;
-    /*padding: 60px 0;*/    
+    /*padding: 60px 0;*/
 }
 
 footer {
@@ -109,9 +109,9 @@ li {
 #warbleBox{
     background-color: #E3EDF5;
     border: 1px solid #ccc;
-    outline: none; 
+    outline: none;
 }
- 
+
 #warbleBox:focus{
     border: 2px solid #56b4ef;
     box-shadow: 0px 0px 3px 1px #c5def0;
@@ -126,9 +126,11 @@ li {
 
 #warbleSubmit:hover {
     background-color: rgb(143, 182, 224);
-    
+
 }
 
 
 /************ Map **************/
-#map { height: 180px; }
+#map{
+  height: 250px; 
+}

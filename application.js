@@ -4,15 +4,9 @@ var application = require('./warbler.js')(),
     fs = require('fs');
 
 application.get("/", function (req, res) {
-  fs.readFile(__dirname + '/index.html', function(err, data){
-    if(err){
-      res.end("Could not read the index file");
-      return;
-    }else{
-      res.write(data);
-      res.end();
-   }
-  });
+  var data = application.loadFile(__dirname + '/index.html');
+  res.write(data);
+  res.end();
 });
 
 application.post('/warble', function (req, res){
@@ -23,23 +17,31 @@ application.post('/warble', function (req, res){
 
   req.on('end', function(){
     var warble;
+
     warbleString = warbleString.replace(/</g, "&lt").replace(/>/g, "&gt");
+    console.log(warbleString);
     try{
       warble = JSON.parse(warbleString);
     }catch(err){
-      console.log(err);
+      console.log("fail to parse");
       res.end("wrong type of data! You must send some JSON!");
+      return -1;
     }
+    console.log(warble);
     //if warble valid?
-    if(warble){
-    db.put(warble.timestamp, warble, function(err){
-      if(err){
-        console.log('Impossible to store the warble into the database');
-      }else{
-        res.end(warbleString);
-      }
-    });
-  }//end if
+    // if(validateQuery(warble, databaseConfig.validator)){
+    if(true){
+      db.put(warble.timestamp, warble, function(err){
+        if(err){
+        }else{
+          res.end(warbleString);
+          return -1;
+        }
+      });
+    }else{
+      console.log("nothing to put in the datatbase");
+      res.end('Les donnees ne sont pas conformes!');
+    }
   });
 });
 
@@ -69,5 +71,22 @@ application.get('/warbles', function (req, res){
     res.end();
   });
 });
+
+//helper functions
+function validateQuery(query, validator){
+    var result = true;
+    for(var prop in validator){
+      if(validator[prop].required){
+        if(!query.hasOwnProperty(prop)){
+          result = false;
+        }
+      }else{
+        if(typeof query[prop] !== validator[prop].type){
+          result = false;
+        }
+      }
+    }
+    return result;
+  }
 
 module.exports = application;

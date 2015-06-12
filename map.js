@@ -37,15 +37,7 @@ var leaflet = {
 	},
 
 	createMarker: function(warble) {
-		navigator.geolocation.getCurrentPosition(function(response){
-			warble.latitude = response.coords.latitude;
-			warble.longitude = response.coords.longitude;
-			console.log("latitude: ", warble.latitude);
-			console.log("longitude: ", warble.longitude);
-			// leaflet.map = L.map('map').setView([leaflet.latitude, leaflet.longitude], 15);
-			var marker = L.marker([warble.latitude, warble.longitude]).addTo(leaflet.map);
-			marker.bindPopup(warble.content).openPopup();
-		});
+		var marker = L.marker([warble.location.latitude, warble.location.longitude]).addTo(leaflet.map);
+		marker.bindPopup(warble.content).openPopup();
 	}
 };
-
