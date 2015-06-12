@@ -17,25 +17,29 @@ application.post('/warble', function (req, res){
 
   req.on('end', function(){
     var warble;
+
     warbleString = warbleString.replace(/</g, "&lt").replace(/>/g, "&gt");
+    console.log(warbleString);
     try{
       warble = JSON.parse(warbleString);
     }catch(err){
-      console.log(err);
+      console.log("fail to parse");
       res.end("wrong type of data! You must send some JSON!");
       return -1;
     }
+    console.log(warble);
     //if warble valid?
-    if(validateQuery(warble, databaseConfig.validator)){
+    // if(validateQuery(warble, databaseConfig.validator)){
+    if(true){
       db.put(warble.timestamp, warble, function(err){
         if(err){
-          console.log('Impossible to store the warble into the database');
         }else{
           res.end(warbleString);
           return -1;
         }
       });
     }else{
+      console.log("nothing to put in the datatbase");
       res.end('Les donnees ne sont pas conformes!');
     }
   });
